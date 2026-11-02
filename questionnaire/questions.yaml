@@ -1,0 +1,368 @@
+# Source of truth for the Dell AI Factory / AI Data Platform standards questionnaire.
+# Edit this file, then run: python3 tools/build_questionnaire.py
+#
+# Question keys:
+#   q     question text
+#   t     answer type: yn | choice | multi | text | number
+#   o     options for choice/multi (list)
+#   own   primary respondent role (see roles below)
+#   p     priority: P1 (needed before Day-0 platform build) | P2 (before first production workload) | P3 (within first two quarters)
+#   std   decision / clause in the target standard that the answer drives
+
+meta:
+  title: Dell AI Factory & AI Data Platform - Enterprise Standards Questionnaire
+  version: "1.0"
+  yn_options: ["Yes", "No", "Partial", "Unknown"]
+  priorities:
+    P1: Needed before Day-0 platform build (architecture, procurement, security baseline)
+    P2: Needed before the first production AI workload goes live
+    P3: Needed within the first two quarters of operation (optimisation, scale-out)
+  maturity:
+    1: Initial - ad hoc, undocumented, person-dependent
+    2: Repeatable - some practices exist but are inconsistent across teams
+    3: Defined - documented enterprise standard, mostly followed
+    4: Managed - standard is measured, automated and enforced (policy-as-code, dashboards)
+    5: Optimising - continuously improved from metrics and feedback; exceptions are rare
+  roles:
+    EXEC: Executive sponsor / AI steering committee
+    EA: Enterprise / solution architect
+    CDO: Chief Data Officer / data governance lead
+    DE: Data engineering lead
+    DS: Data science / ML engineering lead
+    PLAT: Platform engineering / Kubernetes lead
+    INFRA: Compute & storage infrastructure lead
+    NET: Network engineering lead
+    SEC: CISO / security architecture
+    LEGAL: Legal, privacy & compliance
+    OPS: IT operations / SRE
+    FIN: Finance / FinOps
+    FAC: Data center facilities
+    HR: HR / learning & development
+    PROC: Procurement / vendor management
+
+domains:
+  - code: STR
+    name: Strategy, Business Alignment & Use Cases
+    standard: STD-01 AI Strategy & Use-Case Intake Standard
+    intent: Anchor every platform standard to business outcomes, a prioritised use-case portfolio and measurable value.
+    questions:
+      - {q: "What are the top 3-5 business outcomes the AI Factory must deliver in the next 12-24 months?", t: text, own: EXEC, p: P1, std: "Strategic objectives and success KPIs"}
+      - {q: "Which AI workload classes are in scope?", t: multi, o: [Generative AI / LLM inference, RAG / enterprise search, Agentic AI, Model fine-tuning, Foundation model pre-training, Classical ML, Computer vision, Analytics / BI on lakehouse, Digital twins / simulation, Edge AI], own: EA, p: P1, std: "Workload classes the platform must support (sizing baseline)"}
+      - {q: "Is there a documented, prioritised AI use-case backlog with business owners and value estimates?", t: yn, own: EXEC, p: P1, std: "Use-case intake and prioritisation process"}
+      - {q: "How many AI use cases are expected in production at 6, 12 and 24 months?", t: text, own: EXEC, p: P1, std: "Capacity and onboarding throughput targets"}
+      - {q: "What is the intended deployment model for the AI Factory?", t: choice, o: [On-premises data center, Colocation, Hybrid on-prem + public cloud, Edge + core, Dell APEX / as-a-service consumption, Undecided], own: EA, p: P1, std: "Deployment and consumption model"}
+      - {q: "What criteria decide whether a workload runs on the on-prem AI Factory vs. public cloud AI services?", t: text, own: EA, p: P1, std: "Workload placement policy (data gravity, sovereignty, cost, latency)"}
+      - {q: "What value metrics will be tracked per use case (e.g. hours saved, revenue, cost avoided, CSAT)?", t: text, own: FIN, p: P2, std: "Value realisation and benefits tracking"}
+      - {q: "What is the stage-gate for moving a use case from idea -> PoC -> pilot -> production?", t: text, own: EXEC, p: P2, std: "Use-case lifecycle stage gates and exit criteria"}
+      - {q: "Is there a build vs. buy vs. partner policy for AI capabilities (custom models, SaaS copilots, ISV solutions)?", t: yn, own: EA, p: P2, std: "Sourcing decision framework"}
+      - {q: "Which business units are first adopters and who is the accountable business owner for each?", t: text, own: EXEC, p: P1, std: "Tenant onboarding order and accountability"}
+
+  - code: GOV
+    name: AI Governance, Risk & Responsible AI
+    standard: STD-02 AI Governance & Responsible AI Policy
+    intent: Define who approves AI, how risk is classified, and which external frameworks the enterprise aligns to.
+    questions:
+      - {q: "Is there a chartered AI governance body (AI council / steering committee) with decision rights?", t: yn, own: EXEC, p: P1, std: "Governance bodies, membership and decision rights"}
+      - {q: "Which external frameworks must the AI standards align to?", t: multi, o: [NIST AI RMF 1.0, ISO/IEC 42001, ISO/IEC 23894, EU AI Act, OECD AI Principles, Industry regulator guidance, Internal only], own: LEGAL, p: P1, std: "Framework alignment and control mapping"}
+      - {q: "Is there an AI risk-tiering scheme (e.g. minimal / limited / high / prohibited) applied to every use case?", t: yn, own: LEGAL, p: P1, std: "AI risk classification and required controls per tier"}
+      - {q: "Which uses of AI are explicitly prohibited or require executive approval?", t: text, own: LEGAL, p: P1, std: "Prohibited / restricted use list"}
+      - {q: "Is a pre-deployment AI impact assessment (bias, safety, privacy, IP) mandatory? Who signs off?", t: text, own: LEGAL, p: P2, std: "AI impact assessment template and approvers"}
+      - {q: "Is there a central AI inventory / registry of all models, agents and AI-enabled applications?", t: yn, own: CDO, p: P2, std: "AI system inventory (mandatory registration fields)"}
+      - {q: "What human-in-the-loop / human-oversight requirements apply to AI decisions affecting customers or employees?", t: text, own: LEGAL, p: P2, std: "Human oversight requirements by risk tier"}
+      - {q: "What transparency requirements apply (disclosing AI-generated content, model cards, user notices)?", t: text, own: LEGAL, p: P2, std: "Transparency and disclosure rules"}
+      - {q: "How are fairness / bias metrics defined, measured and thresholded for high-risk models?", t: text, own: DS, p: P2, std: "Fairness evaluation and acceptance thresholds"}
+      - {q: "What is the policy on use of copyrighted, licensed or third-party data for training and fine-tuning?", t: text, own: LEGAL, p: P1, std: "Training-data IP and licensing rules"}
+      - {q: "How are AI incidents (harmful output, data leak, model failure) reported, triaged and disclosed?", t: text, own: SEC, p: P2, std: "AI incident management process"}
+      - {q: "How often are standards and policies reviewed, and what is the exception / waiver process?", t: text, own: EA, p: P2, std: "Policy review cadence and exception handling"}
+
+  - code: DAT
+    name: Data Strategy, Governance & Lifecycle
+    standard: STD-03 Data Governance, Classification & Lifecycle Standard
+    intent: Make enterprise data AI-ready - classified, owned, catalogued, quality-assured and lifecycle-managed.
+    questions:
+      - {q: "What is the enterprise data classification scheme and how many levels does it have?", t: choice, o: [Public / Internal / Confidential / Restricted, 3-level scheme, 5+ level scheme, No formal scheme], own: CDO, p: P1, std: "Classification levels and handling rules on the AI Data Platform"}
+      - {q: "Are data owners and data stewards assigned for the domains that will feed AI use cases?", t: yn, own: CDO, p: P1, std: "Data ownership and stewardship RACI"}
+      - {q: "Which data sources will feed the AI Factory initially (ERP, CRM, file shares, data warehouse, logs, IoT, documents, email)?", t: text, own: DE, p: P1, std: "Source system onboarding list"}
+      - {q: "What is the estimated data volume to land on the platform (TB/PB) at Day-0, 12 and 36 months, and its growth rate?", t: text, own: DE, p: P1, std: "Capacity baseline for storage engines"}
+      - {q: "What share of the data is unstructured (documents, images, video, audio) vs. structured / semi-structured?", t: text, own: DE, p: P1, std: "File vs. object vs. table storage split"}
+      - {q: "Is there an enterprise data catalog / metadata management tool in use? Which one?", t: text, own: CDO, p: P1, std: "Catalog of record and mandatory metadata fields"}
+      - {q: "Is end-to-end data lineage (source -> feature/embedding -> model -> output) required?", t: yn, own: CDO, p: P2, std: "Lineage capture requirements"}
+      - {q: "What data quality dimensions and thresholds must be met before data is used for training or RAG?", t: text, own: CDO, p: P2, std: "Data quality rules and gating"}
+      - {q: "Are retention, archival and legal-hold rules defined per data class, including for prompts, embeddings and model outputs?", t: yn, own: LEGAL, p: P2, std: "Retention schedule including AI artefacts"}
+      - {q: "Is synthetic data or data anonymisation / pseudonymisation used or planned?", t: yn, own: CDO, p: P3, std: "Synthetic and de-identified data rules"}
+      - {q: "Are data products / data contracts used between producing and consuming teams?", t: yn, own: DE, p: P3, std: "Data product and contract standard"}
+      - {q: "What is the data sovereignty / residency requirement (countries, regions, sites)?", t: text, own: LEGAL, p: P1, std: "Data residency and cross-border transfer rules"}
+
+  - code: STO
+    name: Storage Engines (PowerScale / ObjectScale)
+    standard: STD-04 AI Storage Services Standard
+    intent: Standardise the storage service catalogue - file vs. object, performance tiers, tenancy, protection and data access protocols.
+    questions:
+      - {q: "Which storage engines are in scope?", t: multi, o: [Dell PowerScale (scale-out file / NAS), Dell ObjectScale (S3 object), Existing third-party NAS, Existing third-party object store, Public cloud object storage, Parallel file system], own: INFRA, p: P1, std: "Approved storage platforms"}
+      - {q: "Which data access protocols must be supported?", t: multi, o: [NFSv3, NFSv4.x, NFS over RDMA, SMB, S3, S3 over RDMA, HDFS, POSIX parallel FS client], own: INFRA, p: P1, std: "Supported protocols per storage service"}
+      - {q: "Is NVIDIA GPUDirect Storage (GDS) or RDMA data access required for training / high-throughput inference?", t: yn, own: INFRA, p: P1, std: "High-performance data path requirements"}
+      - {q: "What throughput (GB/s) and IOPS targets are required per GPU node / per cluster for training and checkpointing?", t: text, own: INFRA, p: P1, std: "Performance tier definitions and SLOs"}
+      - {q: "How should storage tiers be defined (e.g. all-flash hot, hybrid warm, archive / cloud tier) and what moves data between them?", t: text, own: INFRA, p: P2, std: "Tiering policy (e.g. SmartPools / CloudPools / lifecycle rules)"}
+      - {q: "What multi-tenancy model is required (access zones, namespaces, buckets per team / per use case)?", t: choice, o: [Per business unit, Per project / use case, Per environment (dev/test/prod), Shared with ACLs only, Undecided], own: INFRA, p: P1, std: "Tenant isolation model and naming"}
+      - {q: "Are quotas and capacity guardrails required per tenant / project?", t: yn, own: INFRA, p: P2, std: "Quota standard (hard / soft / advisory)"}
+      - {q: "What snapshot and replication RPO/RTO are required per data class?", t: text, own: INFRA, p: P2, std: "Snapshot and replication policy"}
+      - {q: "Is immutability / WORM / object lock required for any data (regulatory, training-set provenance, audit)?", t: yn, own: LEGAL, p: P2, std: "Immutability and object-lock rules"}
+      - {q: "Is metadata indexing / search over file and object metadata needed to discover AI-ready data?", t: yn, own: DE, p: P3, std: "Metadata indexing and tagging (e.g. PowerScale MetadataIQ)"}
+      - {q: "Which Kubernetes CSI / Container Storage Modules integrations are required for containerised AI workloads?", t: text, own: PLAT, p: P2, std: "Persistent storage for Kubernetes (CSI drivers, storage classes)"}
+      - {q: "What existing storage must be migrated or federated into the AI Data Platform and on what timeline?", t: text, own: INFRA, p: P1, std: "Migration / co-existence plan"}
+
+  - code: LAK
+    name: Data Engines - Lakehouse, Processing & Analytics
+    standard: STD-05 Lakehouse & Data Engine Standard
+    intent: Standardise table formats, catalogs, query federation and processing engines that prepare data for AI.
+    questions:
+      - {q: "Which data engines are in scope?", t: multi, o: [Dell Data Lakehouse / Data Analytics Engine (Trino / Starburst based), Spark-based data processing engine, Existing enterprise data warehouse, Databricks, Snowflake, Cloud-native lakehouse, Undecided], own: EA, p: P1, std: "Approved data engines and their roles"}
+      - {q: "What is the standard open table format?", t: choice, o: [Apache Iceberg, Delta Lake, Apache Hudi, Multiple allowed, Undecided], own: DE, p: P1, std: "Table format standard"}
+      - {q: "Which metastore / catalog is the system of record for table metadata (e.g. Iceberg REST, Hive, Unity, Polaris)?", t: text, own: DE, p: P1, std: "Catalog of record for lakehouse tables"}
+      - {q: "Is federated query across existing databases and clouds required instead of copying data?", t: yn, own: DE, p: P2, std: "Federation vs. ingestion decision rules"}
+      - {q: "What zone / layer model will be used (e.g. raw / bronze -> curated / silver -> consumption / gold)?", t: text, own: DE, p: P1, std: "Lakehouse zone model and promotion rules"}
+      - {q: "What are the standard file formats and compression codecs for ingested data?", t: text, own: DE, p: P2, std: "File format and partitioning conventions"}
+      - {q: "Is GPU-accelerated data processing (e.g. RAPIDS / Spark on GPU) required for data prep?", t: yn, own: DE, p: P3, std: "Accelerated processing usage criteria"}
+      - {q: "Which BI / analytics tools must connect to the lakehouse?", t: text, own: DE, p: P2, std: "Supported consumer tools and connectors"}
+      - {q: "What fine-grained access controls (row / column masking, tag-based policies) are needed at the query layer?", t: text, own: SEC, p: P1, std: "Query-layer access control model"}
+      - {q: "Is a feature store required for classical ML, and should it be on the lakehouse?", t: yn, own: DS, p: P3, std: "Feature store standard"}
+
+  - code: ING
+    name: Data Ingestion, Integration & Pipelines
+    standard: STD-06 Data Ingestion & Pipeline Standard
+    intent: Define how data gets onto the platform - batch, streaming, CDC, document ingestion - with orchestration and observability.
+    questions:
+      - {q: "Which ingestion patterns are required?", t: multi, o: [Batch file transfer, Database CDC, Streaming (Kafka / event hub), API pull, Document / content repository crawl, IoT / edge sync, Manual upload], own: DE, p: P1, std: "Approved ingestion patterns"}
+      - {q: "Which ingestion / ETL / ELT tools are already licensed and should be reused?", t: text, own: DE, p: P1, std: "Approved integration tooling"}
+      - {q: "What orchestration tool is the standard (e.g. Airflow, Argo Workflows, Dagster, Control-M)?", t: text, own: DE, p: P2, std: "Pipeline orchestration standard"}
+      - {q: "What freshness / latency SLAs do AI use cases need from source data?", t: text, own: DE, p: P2, std: "Data freshness SLA tiers"}
+      - {q: "How should unstructured content (PDF, Office, HTML, scans) be parsed, chunked and enriched for AI?", t: text, own: DS, p: P2, std: "Document processing pipeline standard"}
+      - {q: "Is pipeline code required to be version-controlled with CI/CD and automated tests?", t: yn, own: DE, p: P2, std: "Pipeline engineering practices"}
+      - {q: "How are schema changes and breaking changes from sources detected and handled?", t: text, own: DE, p: P3, std: "Schema evolution policy"}
+      - {q: "Is sensitive-data detection / redaction (PII, PHI, secrets) required during ingestion?", t: yn, own: SEC, p: P1, std: "Inline sensitive-data scanning"}
+      - {q: "How should pipeline failures, data quality breaches and SLA misses be alerted and owned?", t: text, own: OPS, p: P2, std: "Pipeline observability and on-call"}
+
+  - code: RAG
+    name: Retrieval, Vector Search & Knowledge (RAG)
+    standard: STD-07 Retrieval-Augmented Generation & Vector Search Standard
+    intent: Standardise embedding, indexing, retrieval and permission-aware search used by GenAI and agents.
+    questions:
+      - {q: "Which vector / search engine(s) will be standard?", t: multi, o: [Dell Data Search Engine (Elastic-based), Elasticsearch / OpenSearch, Milvus, pgvector, NVIDIA cuVS-accelerated index, Vendor-managed vector DB, Undecided], own: EA, p: P1, std: "Approved vector / search engines"}
+      - {q: "Is hybrid search (keyword + vector) and re-ranking required?", t: yn, own: DS, p: P2, std: "Retrieval pipeline reference design"}
+      - {q: "Must retrieval enforce source-system permissions (document-level ACLs) for every user query?", t: yn, own: SEC, p: P1, std: "Permission-aware retrieval requirement"}
+      - {q: "Which embedding models are approved, and how is embedding model versioning / re-indexing handled?", t: text, own: DS, p: P2, std: "Embedding model registry and re-index policy"}
+      - {q: "What chunking, metadata and citation standards must RAG applications follow?", t: text, own: DS, p: P2, std: "Chunking and citation rules"}
+      - {q: "What is the expected corpus size (documents / vectors) and query volume (QPS) per application?", t: text, own: DS, p: P1, std: "Index sizing and scaling tiers"}
+      - {q: "How is index freshness kept in sync with source changes and deletions (right-to-be-forgotten)?", t: text, own: DE, p: P2, std: "Index refresh and deletion propagation"}
+      - {q: "How are RAG answers evaluated for groundedness, relevance and hallucination before and after release?", t: text, own: DS, p: P2, std: "RAG evaluation metrics and thresholds"}
+
+  - code: CMP
+    name: Compute & Accelerators
+    standard: STD-08 AI Compute & Accelerator Standard
+    intent: Standardise server SKUs, GPU classes, partitioning and scheduling for training, fine-tuning and inference.
+    questions:
+      - {q: "Which accelerator ecosystems are approved?", t: multi, o: [NVIDIA, AMD Instinct, Intel Gaudi, CPU-only inference, Undecided], own: INFRA, p: P1, std: "Approved accelerator vendors"}
+      - {q: "Which PowerEdge server classes are anticipated (e.g. XE-series 8-GPU training nodes, PCIe GPU inference nodes, rack-scale systems)?", t: text, own: INFRA, p: P1, std: "Standard server building blocks (SKUs)"}
+      - {q: "What is the expected workload mix by GPU-hours: training / fine-tuning / inference / data prep?", t: text, own: DS, p: P1, std: "Cluster sizing and node-pool split"}
+      - {q: "What is the largest model (parameters) to be trained, fine-tuned or served, and with what context length?", t: text, own: DS, p: P1, std: "GPU memory and interconnect requirements"}
+      - {q: "Is GPU partitioning / sharing required (MIG, time-slicing, vGPU)?", t: yn, own: PLAT, p: P2, std: "GPU sharing policy"}
+      - {q: "Which workload scheduler(s) will allocate GPUs?", t: multi, o: [Kubernetes (native / Kueue), NVIDIA Run:ai, Slurm, OpenShift AI, VMware Private AI, Undecided], own: PLAT, p: P1, std: "Scheduler standard and queue design"}
+      - {q: "How are GPU quotas, priorities and pre-emption decided between teams?", t: text, own: PLAT, p: P2, std: "Fair-share, quota and pre-emption policy"}
+      - {q: "What target GPU utilisation is expected, and what happens to idle allocations?", t: text, own: FIN, p: P2, std: "Utilisation targets and reclaim policy"}
+      - {q: "Is there a standard for CPU, memory and local NVMe per GPU node?", t: yn, own: INFRA, p: P2, std: "Node configuration baseline"}
+      - {q: "What is the hardware refresh / generation-mixing policy (e.g. Hopper and Blackwell in one cluster)?", t: text, own: INFRA, p: P3, std: "Lifecycle and heterogeneous cluster policy"}
+      - {q: "Are AI PCs / workstations (developer and edge inference) part of the standard?", t: yn, own: EA, p: P3, std: "Client and edge AI device standard"}
+
+  - code: NET
+    name: Networking & Fabric
+    standard: STD-09 AI Network Fabric Standard
+    intent: Standardise compute (east-west), storage and front-end networks, segmentation and connectivity for the AI Factory.
+    questions:
+      - {q: "Which back-end (GPU-to-GPU) fabric technology is preferred?", t: choice, o: [InfiniBand, Ethernet with RoCE (e.g. NVIDIA Spectrum-X), Ethernet with RoCE (Dell PowerSwitch / other ASIC), No multi-node training planned, Undecided], own: NET, p: P1, std: "Compute fabric standard"}
+      - {q: "What per-GPU network bandwidth is required (e.g. 200 / 400 / 800 Gb/s)?", t: choice, o: [100 Gb/s, 200 Gb/s, 400 Gb/s, 800 Gb/s, Undecided], own: NET, p: P1, std: "Port speed and NIC / SuperNIC / DPU standard"}
+      - {q: "Will storage traffic use a dedicated network separate from compute and front-end traffic?", t: yn, own: NET, p: P1, std: "Network plane separation"}
+      - {q: "What topology and oversubscription ratio are acceptable (rail-optimised, non-blocking fat-tree, etc.)?", t: text, own: NET, p: P1, std: "Topology and oversubscription rules"}
+      - {q: "How will tenants and environments be segmented (VRF, VLAN / VXLAN, micro-segmentation)?", t: text, own: NET, p: P1, std: "Segmentation model"}
+      - {q: "What connectivity is required to existing data centers, public clouds and edge sites, and at what bandwidth?", t: text, own: NET, p: P2, std: "WAN / interconnect standard"}
+      - {q: "Is DPU / SmartNIC offload (security, storage, networking) required?", t: yn, own: NET, p: P3, std: "DPU usage policy"}
+      - {q: "How will inference endpoints be exposed (internal load balancer, API gateway, service mesh, ingress)?", t: text, own: PLAT, p: P2, std: "North-south exposure pattern"}
+      - {q: "What IP addressing, DNS and naming conventions apply to AI Factory networks?", t: text, own: NET, p: P1, std: "IPAM, DNS and naming"}
+
+  - code: PLT
+    name: Platform Software, Kubernetes & AI Software Stack
+    standard: STD-10 Platform Software & AI Stack Standard
+    intent: Standardise the OS, container platform, AI software stack and provisioning automation.
+    questions:
+      - {q: "Which container / virtualisation platform is standard for AI workloads?", t: choice, o: [Red Hat OpenShift, Upstream Kubernetes, VMware vSphere / VCF with Private AI, Rancher / RKE2, Bare metal + Slurm, Multiple, Undecided], own: PLAT, p: P1, std: "Approved runtime platforms"}
+      - {q: "Which AI software stack(s) are approved?", t: multi, o: [NVIDIA AI Enterprise (NIM / NeMo / Triton), Red Hat OpenShift AI, Open-source (vLLM / Ray / KServe / Kubeflow), AMD ROCm stack, Hugging Face (incl. Dell Enterprise Hub), Undecided], own: PLAT, p: P1, std: "Approved AI software stacks"}
+      - {q: "What is the standard OS and driver / firmware baseline for GPU nodes?", t: text, own: INFRA, p: P1, std: "Golden image and driver / firmware matrix"}
+      - {q: "How will bare-metal provisioning and cluster build be automated (e.g. Dell Omnia, OpenManage, Ansible, Terraform)?", t: text, own: PLAT, p: P1, std: "Infrastructure-as-code and provisioning toolchain"}
+      - {q: "Is GitOps required for cluster and application configuration?", t: yn, own: PLAT, p: P2, std: "GitOps / configuration management"}
+      - {q: "What is the patching and upgrade cadence for firmware, OS, drivers, Kubernetes and AI stack?", t: text, own: OPS, p: P2, std: "Patch and upgrade policy"}
+      - {q: "Is there an approved internal container registry and base-image policy?", t: yn, own: SEC, p: P1, std: "Image registry and base-image standard"}
+      - {q: "Will developers get self-service workspaces (notebooks, IDEs, sandboxes)? Through which portal?", t: text, own: PLAT, p: P2, std: "Developer self-service and golden paths"}
+      - {q: "How many environments are required (dev / test / staging / prod) and are they physically or logically separated?", t: text, own: PLAT, p: P1, std: "Environment strategy"}
+      - {q: "Is an air-gapped / disconnected deployment required for any environment?", t: yn, own: SEC, p: P1, std: "Disconnected install and artefact mirroring"}
+
+  - code: MLO
+    name: Model Lifecycle - MLOps / LLMOps
+    standard: STD-11 Model Lifecycle (MLOps / LLMOps) Standard
+    intent: Standardise how models are sourced, trained, evaluated, approved, served, monitored and retired.
+    questions:
+      - {q: "Which model sources are permitted?", t: multi, o: [Commercial API models, Open-weight models (Llama / Mistral / Qwen / etc.), NVIDIA NIM-packaged models, Hugging Face / Dell Enterprise Hub, Internally trained models, Vendor-embedded models], own: DS, p: P1, std: "Approved model sources and licences"}
+      - {q: "Is there a model approval / allow-list process (licence, security scan, evaluation) before a model can be used?", t: yn, own: SEC, p: P1, std: "Model onboarding and allow-list"}
+      - {q: "Which model registry and experiment-tracking tools are standard (e.g. MLflow)?", t: text, own: DS, p: P2, std: "Registry and experiment tracking"}
+      - {q: "What metadata is mandatory for every registered model (owner, data sources, intended use, risk tier, eval results, model card)?", t: text, own: CDO, p: P2, std: "Model card / registration schema"}
+      - {q: "Which inference serving runtimes are standard (e.g. NIM, Triton, vLLM, KServe)?", t: text, own: PLAT, p: P1, std: "Serving runtime standard"}
+      - {q: "What latency, throughput and availability SLOs apply to inference endpoints by tier?", t: text, own: OPS, p: P2, std: "Inference SLO tiers"}
+      - {q: "What offline evaluation (accuracy, safety, red-teaming) is required before promotion to production?", t: text, own: DS, p: P2, std: "Pre-release evaluation gates"}
+      - {q: "How are models monitored in production (drift, quality, toxicity, cost per request)?", t: text, own: DS, p: P2, std: "Production model monitoring"}
+      - {q: "Are guardrails (input / output filtering, topic control, jailbreak detection) mandatory for GenAI apps?", t: yn, own: SEC, p: P1, std: "Guardrail requirements (e.g. NeMo Guardrails or equivalent)"}
+      - {q: "What is the policy for fine-tuning (who may fine-tune, on which data, approval required)?", t: text, own: DS, p: P2, std: "Fine-tuning policy"}
+      - {q: "Is a central AI / LLM gateway required for routing, rate limiting, logging and cost tracking of model calls?", t: yn, own: PLAT, p: P2, std: "AI gateway standard"}
+      - {q: "How are models versioned, rolled back and retired?", t: text, own: DS, p: P3, std: "Versioning, rollback and decommissioning"}
+
+  - code: AGT
+    name: Agentic AI & Tool Integration
+    standard: STD-12 Agentic AI Standard
+    intent: Define safe patterns for AI agents that call tools, APIs and data on behalf of users.
+    questions:
+      - {q: "Are autonomous or semi-autonomous agents in scope for the first 12 months?", t: yn, own: EXEC, p: P1, std: "Agentic AI scope"}
+      - {q: "Which agent frameworks / protocols are approved (e.g. MCP, A2A, LangGraph, NVIDIA AI Blueprints / Agent toolkits)?", t: text, own: EA, p: P2, std: "Approved agent frameworks and protocols"}
+      - {q: "What actions may agents take without human approval (read-only, draft, transact, change systems)?", t: text, own: LEGAL, p: P1, std: "Agent autonomy levels and approval matrix"}
+      - {q: "How do agents authenticate to tools and data - user delegation (on-behalf-of) or service identity?", t: choice, o: [On-behalf-of the end user, Dedicated agent service identity, Both by risk tier, Undecided], own: SEC, p: P1, std: "Agent identity and least-privilege"}
+      - {q: "Is a registry of approved tools / MCP servers that agents may call required?", t: yn, own: SEC, p: P2, std: "Tool / MCP server registry"}
+      - {q: "What logging and traceability is required for every agent step (prompts, tool calls, results)?", t: text, own: SEC, p: P2, std: "Agent audit trail"}
+      - {q: "What spend, rate and loop limits apply to agents?", t: text, own: FIN, p: P2, std: "Agent runtime guardrails"}
+
+  - code: SEC
+    name: Security, Identity & Zero Trust
+    standard: STD-13 AI Security & Identity Standard
+    intent: Apply enterprise security baselines to AI infrastructure, data, models and applications.
+    questions:
+      - {q: "Which identity provider(s) are authoritative for users and service accounts (AD, Entra ID, Okta, LDAP)?", t: text, own: SEC, p: P1, std: "Identity source of truth and SSO"}
+      - {q: "What access model is required: RBAC, ABAC (tag / attribute based) or both?", t: choice, o: [RBAC, ABAC, RBAC + ABAC, Undecided], own: SEC, p: P1, std: "Authorisation model"}
+      - {q: "Is encryption at rest mandatory on all storage, and must keys be held in an external KMS / HSM?", t: yn, own: SEC, p: P1, std: "Encryption at rest and key management"}
+      - {q: "Is TLS / mTLS mandatory for all data-in-transit, including inside the cluster and storage networks?", t: yn, own: SEC, p: P1, std: "Encryption in transit"}
+      - {q: "What secrets-management solution is standard (e.g. HashiCorp Vault, CyberArk, cloud KMS)?", t: text, own: SEC, p: P1, std: "Secrets management"}
+      - {q: "Which security frameworks apply to AI applications (e.g. OWASP Top 10 for LLM Apps, MITRE ATLAS, NIST CSF 2.0)?", t: multi, o: [OWASP Top 10 for LLM Applications, MITRE ATLAS, NIST CSF 2.0, NIST SP 800-53, ISO/IEC 27001, CIS Benchmarks, Internal baseline only], own: SEC, p: P1, std: "Security control frameworks"}
+      - {q: "How are prompt injection, data exfiltration via prompts and insecure output handling mitigated?", t: text, own: SEC, p: P2, std: "GenAI application security controls"}
+      - {q: "Is software / model supply-chain security required (SBOM, image signing, model weight scanning and provenance)?", t: yn, own: SEC, p: P1, std: "Supply-chain security (SBOM, signing, scanning)"}
+      - {q: "Is privileged access to infrastructure (iDRAC, OneFS, switches, Kubernetes admin) brokered through a PAM solution?", t: yn, own: SEC, p: P1, std: "Privileged access management"}
+      - {q: "Which logs must go to the SIEM, and what is the retention period?", t: text, own: SEC, p: P2, std: "Security logging and SIEM integration"}
+      - {q: "Is AI red-teaming / penetration testing required before go-live and periodically?", t: yn, own: SEC, p: P2, std: "Offensive testing cadence"}
+      - {q: "What hardware security requirements apply (secure boot, silicon root of trust, firmware signing, TPM)?", t: text, own: INFRA, p: P1, std: "Hardware / firmware security baseline"}
+
+  - code: PRV
+    name: Privacy & Regulatory Compliance
+    standard: STD-14 Privacy & Regulatory Compliance Standard
+    intent: Capture regulatory obligations that constrain data use, model behaviour and evidence collection.
+    questions:
+      - {q: "Which regulations apply to data and AI processed on the platform?", t: multi, o: [GDPR, CCPA / CPRA, HIPAA, PCI DSS, SOX, GLBA, EU AI Act, DORA, NIS2, FedRAMP / FISMA, Industry-specific, None identified], own: LEGAL, p: P1, std: "Applicable regulation register"}
+      - {q: "Is PII / PHI / PCI data permitted in prompts, training data or RAG indexes? Under what controls?", t: text, own: LEGAL, p: P1, std: "Sensitive data in AI rules"}
+      - {q: "Is a DPIA / privacy impact assessment required for AI use cases processing personal data?", t: yn, own: LEGAL, p: P2, std: "Privacy assessment requirements"}
+      - {q: "How must data-subject rights (access, deletion, objection) be honoured across models, embeddings and logs?", t: text, own: LEGAL, p: P2, std: "Data-subject rights handling"}
+      - {q: "What audit evidence must the platform produce automatically (access logs, approvals, model lineage)?", t: text, own: LEGAL, p: P2, std: "Compliance evidence and audit readiness"}
+      - {q: "Are there contractual restrictions on customer or partner data being used for AI?", t: yn, own: LEGAL, p: P1, std: "Contractual data-use restrictions"}
+      - {q: "Which certifications / attestations must the AI Factory support (SOC 2, ISO 27001, ISO 42001, HITRUST)?", t: text, own: LEGAL, p: P3, std: "Certification roadmap"}
+
+  - code: OPS
+    name: Operations, Observability & Support
+    standard: STD-15 AI Operations & Observability Standard
+    intent: Standardise monitoring, alerting, SLOs, incident management and vendor support for the AI Factory.
+    questions:
+      - {q: "Which observability stack is standard (e.g. Prometheus / Grafana, Splunk, Datadog, Dynatrace, ELK)?", t: text, own: OPS, p: P1, std: "Observability tooling"}
+      - {q: "Which Dell management tools will be used (e.g. OpenManage Enterprise, iDRAC, APEX AIOps / CloudIQ, PowerScale InsightIQ)?", t: multi, o: [OpenManage Enterprise, iDRAC, APEX AIOps (CloudIQ), PowerScale InsightIQ, SmartFabric / switch management, None / third-party only], own: OPS, p: P1, std: "Infrastructure management tooling"}
+      - {q: "Which GPU, fabric and storage telemetry must be collected (e.g. DCGM metrics, ECC errors, link errors, throughput)?", t: text, own: OPS, p: P2, std: "Mandatory telemetry and metrics"}
+      - {q: "What platform SLOs (availability, job start time, storage latency) will be published to tenants?", t: text, own: OPS, p: P2, std: "Platform SLOs and SLAs"}
+      - {q: "Which ITSM tool and processes (incident, change, problem) govern the AI Factory?", t: text, own: OPS, p: P1, std: "ITSM integration"}
+      - {q: "What support model is expected from Dell and partners (ProSupport level, managed services, resident engineers)?", t: text, own: PROC, p: P1, std: "Vendor support model"}
+      - {q: "What is the on-call model and support hours for platform vs. application teams?", t: text, own: OPS, p: P2, std: "Support tiers and on-call RACI"}
+      - {q: "Is automated remediation / AIOps expected for common failures (node drain, GPU reset, job requeue)?", t: yn, own: OPS, p: P3, std: "Automated remediation runbooks"}
+      - {q: "What is the change-freeze and maintenance-window policy for a shared GPU cluster with long-running jobs?", t: text, own: OPS, p: P2, std: "Maintenance window policy"}
+
+  - code: BCR
+    name: Resilience, Backup & Cyber Recovery
+    standard: STD-16 Resilience, Backup & Cyber Recovery Standard
+    intent: Define what must be protected (data, models, checkpoints, configs) and how fast it must recover.
+    questions:
+      - {q: "Which AI assets are business-critical and must be backed up (training data, curated tables, model weights, checkpoints, vector indexes, configs)?", t: multi, o: [Raw / source data, Curated lakehouse tables, Model weights, Training checkpoints, Vector indexes, Prompts and logs, Platform configuration / IaC], own: INFRA, p: P1, std: "Protection scope"}
+      - {q: "What RPO / RTO apply to each critical AI service?", t: text, own: OPS, p: P1, std: "RPO / RTO tiers"}
+      - {q: "Is a secondary site / DR AI Factory required, or is degraded service acceptable during disaster?", t: choice, o: [Active-active, Active-passive DR site, Cloud DR, Backup-only restore, No DR required], own: EA, p: P1, std: "DR topology"}
+      - {q: "Is an isolated cyber-recovery vault (air-gapped, immutable copies) required?", t: yn, own: SEC, p: P2, std: "Cyber recovery vault (e.g. PowerProtect Cyber Recovery)"}
+      - {q: "Which backup software is standard (e.g. PowerProtect Data Manager, Veeam, Commvault)?", t: text, own: INFRA, p: P2, std: "Backup tooling"}
+      - {q: "How often must restores and DR failovers be tested?", t: text, own: OPS, p: P2, std: "Recovery testing cadence"}
+      - {q: "What checkpointing frequency is required for long training jobs to tolerate node / GPU failure?", t: text, own: DS, p: P2, std: "Checkpoint policy"}
+
+  - code: FIN
+    name: FinOps, Chargeback & Capacity Management
+    standard: STD-17 AI FinOps & Capacity Standard
+    intent: Make AI Factory cost transparent and fairly allocated, and plan capacity ahead of demand.
+    questions:
+      - {q: "What funding model will be used for the AI Factory?", t: choice, o: [Central IT funded, Showback only, Chargeback to business units, Hybrid (core central, usage charged), Undecided], own: FIN, p: P1, std: "Funding and allocation model"}
+      - {q: "Which cost units will be metered (GPU-hours, storage TB-month, tokens, API calls, network)?", t: multi, o: [GPU-hours, CPU-hours, Storage TB-month, Tokens / requests, Data egress, Licences, Support / services], own: FIN, p: P2, std: "Metering units and rate card"}
+      - {q: "Which mandatory tags / labels are required on every workload and dataset (cost center, owner, project, environment, data class)?", t: text, own: FIN, p: P1, std: "Mandatory tagging / labelling standard"}
+      - {q: "Is a consumption-based procurement model preferred (e.g. Dell APEX / as-a-service) over capex?", t: choice, o: [Capex purchase, Opex / as-a-service, Lease, Mixed, Undecided], own: PROC, p: P1, std: "Procurement model"}
+      - {q: "What is the capacity planning horizon and trigger for expansion (utilisation %, queue wait time)?", t: text, own: INFRA, p: P2, std: "Capacity triggers"}
+      - {q: "How will on-prem cost-per-unit be benchmarked against public cloud alternatives?", t: text, own: FIN, p: P3, std: "TCO benchmarking"}
+      - {q: "Are budgets and alerts required per team / project?", t: yn, own: FIN, p: P2, std: "Budgets and spend alerts"}
+
+  - code: FAC
+    name: Data Center Facilities & Sustainability
+    standard: STD-18 AI Data Center & Sustainability Standard
+    intent: Confirm the site can host high-density AI racks and set energy / sustainability targets.
+    questions:
+      - {q: "What is the available power per rack today and the maximum achievable (kW / rack)?", t: text, own: FAC, p: P1, std: "Rack power density standard"}
+      - {q: "What cooling is available or planned?", t: multi, o: [Air cooling only, Rear-door heat exchangers, Direct liquid cooling (DLC), Immersion cooling, Unknown], own: FAC, p: P1, std: "Cooling standard"}
+      - {q: "What total facility power (MW) and floor space can be allocated to the AI Factory over 36 months?", t: text, own: FAC, p: P1, std: "Site capacity plan"}
+      - {q: "Are pre-integrated rack-scale deliveries acceptable (e.g. Dell Integrated Rack Scalable Systems), and are there dock / weight / floor-loading limits?", t: text, own: FAC, p: P1, std: "Rack delivery and site-readiness checklist"}
+      - {q: "Are there sustainability targets (PUE, carbon intensity, renewable %, heat reuse) the AI Factory must report against?", t: text, own: FAC, p: P2, std: "Sustainability KPIs and reporting"}
+      - {q: "Is power capping / energy-aware scheduling required for GPUs?", t: yn, own: OPS, p: P3, std: "Energy management policy"}
+      - {q: "What are the e-waste, asset disposal and data-sanitisation requirements at end of life?", t: text, own: PROC, p: P3, std: "Asset retirement and sanitisation"}
+
+  - code: ORG
+    name: Operating Model, Skills & Adoption
+    standard: STD-19 AI Operating Model & Skills Standard
+    intent: Define the teams, roles, skills and engagement model that run and consume the AI Factory.
+    questions:
+      - {q: "What operating model is preferred for AI delivery?", t: choice, o: [Centralised AI CoE, Federated (hub-and-spoke), Decentralised per business unit, Undecided], own: EXEC, p: P1, std: "AI operating model"}
+      - {q: "Which platform roles exist today and which must be hired or contracted (platform SRE, ML engineer, data engineer, AI security)?", t: text, own: HR, p: P1, std: "Role catalogue and staffing plan"}
+      - {q: "What training / certification paths are required for platform and consumer teams?", t: text, own: HR, p: P2, std: "Skills and certification paths"}
+      - {q: "How will tenants onboard to the platform (request form, SLA, onboarding checklist)?", t: text, own: PLAT, p: P2, std: "Tenant onboarding process"}
+      - {q: "What role will Dell Professional Services / partners play (design, deployment, residency, managed service)?", t: text, own: PROC, p: P1, std: "Partner engagement model"}
+      - {q: "Is there an acceptable-use policy and mandatory training for employees using GenAI tools?", t: yn, own: HR, p: P2, std: "GenAI acceptable-use and literacy training"}
+      - {q: "How will internal community, documentation and reusable assets (templates, blueprints) be shared?", t: text, own: PLAT, p: P3, std: "Inner-source and knowledge sharing"}
+
+  - code: ARC
+    name: Architecture Standards, Interoperability & Vendor Strategy
+    standard: STD-20 Reference Architecture, Naming & Exception Standard
+    intent: Lock in reference architectures, naming conventions, interoperability and the exception process that all other standards depend on.
+    questions:
+      - {q: "Which Dell AI Factory reference architecture / validated design will be the baseline (e.g. Dell AI Factory with NVIDIA, with AMD, with Intel)?", t: choice, o: [Dell AI Factory with NVIDIA, Dell AI Factory with AMD, Dell AI Factory with Intel, Multi-vendor, Undecided], own: EA, p: P1, std: "Baseline reference architecture"}
+      - {q: "Which existing enterprise architecture standards (cloud, data, security, integration) must the AI Factory inherit?", t: text, own: EA, p: P1, std: "Inherited enterprise standards"}
+      - {q: "What naming conventions apply to clusters, namespaces, storage zones / buckets, datasets, models and endpoints?", t: text, own: EA, p: P1, std: "Naming convention standard"}
+      - {q: "What open standards / APIs are mandatory to avoid lock-in (S3, NFS, Iceberg, OpenAI-compatible APIs, Kubernetes, OpenTelemetry)?", t: multi, o: [S3 API, NFS / POSIX, Apache Iceberg, OpenAI-compatible inference API, Kubernetes APIs, OpenTelemetry, ONNX, MCP], own: EA, p: P1, std: "Mandatory open interfaces"}
+      - {q: "What is the multi-vendor / exit strategy for hardware, software and model providers?", t: text, own: PROC, p: P2, std: "Vendor diversification and exit plan"}
+      - {q: "Which architecture review board approves new patterns and deviations, and with what SLA?", t: text, own: EA, p: P1, std: "Architecture review and exception process"}
+      - {q: "How will standards be published, versioned and enforced (wiki, policy-as-code, CI checks, admission controllers)?", t: text, own: EA, p: P2, std: "Standards publication and enforcement mechanism"}
+      - {q: "Which documentation artefacts are mandatory per AI solution (HLD, LLD, threat model, runbook, model card)?", t: multi, o: [High-level design, Low-level design, Threat model, Data flow diagram, Runbook, Model card, AI impact assessment, DR plan], own: EA, p: P2, std: "Mandatory solution documentation"}
+
+# Dell AI Factory / AI Data Platform building blocks referenced by the questions.
+# Names reflect Dell's public portfolio as understood at authoring time - verify against
+# https://www.dell.com/en-us/shop/artificial-intelligence/sc/ai-data-platform and your Dell account team.
+components:
+  - {layer: Storage engine, component: Dell PowerScale, role: "Scale-out file storage (OneFS) for unstructured AI data; NFS / SMB / S3 / HDFS; NFS over RDMA and GPUDirect Storage for GPU data paths", domains: [STO, BCR]}
+  - {layer: Storage engine, component: Dell ObjectScale, role: "S3-compatible object storage for data lakes, model artefacts and checkpoints", domains: [STO, LAK]}
+  - {layer: Data engine, component: Dell Data Lakehouse / Data Analytics Engine, role: "Federated SQL analytics and lakehouse (Trino / Starburst based, Apache Iceberg)", domains: [LAK, ING]}
+  - {layer: Data engine, component: Spark-based Data Processing Engine, role: "Distributed data preparation and transformation for AI pipelines", domains: [LAK, ING]}
+  - {layer: Data engine, component: Data Search Engine / vector search, role: "Hybrid keyword + semantic search and vector indexing for RAG and agents", domains: [RAG]}
+  - {layer: Compute, component: Dell PowerEdge XE / R-series GPU servers, role: "Accelerated compute for training, fine-tuning and inference (NVIDIA, AMD, Intel accelerators)", domains: [CMP, FAC]}
+  - {layer: Network, component: Dell PowerSwitch / NVIDIA Spectrum-X / InfiniBand, role: "Back-end GPU fabric, storage and front-end networks", domains: [NET]}
+  - {layer: AI software, component: NVIDIA AI Enterprise (NIM, NeMo, Triton), role: "Model serving, customisation and guardrails stack in Dell AI Factory with NVIDIA", domains: [PLT, MLO, AGT]}
+  - {layer: AI software, component: Dell Enterprise Hub on Hugging Face, role: "Curated open models optimised for Dell infrastructure", domains: [MLO]}
+  - {layer: Platform, component: Red Hat OpenShift AI / Kubernetes / Dell Container Storage Modules, role: "Container platform and persistent storage integration for AI workloads", domains: [PLT, STO]}
+  - {layer: Automation, component: Dell Omnia / OpenManage Enterprise / iDRAC, role: "Bare-metal provisioning, cluster deployment and lifecycle management", domains: [PLT, OPS]}
+  - {layer: Operations, component: APEX AIOps (CloudIQ) / InsightIQ, role: "Infrastructure health, capacity and performance analytics", domains: [OPS, FIN]}
+  - {layer: Protection, component: PowerProtect Data Manager / Cyber Recovery, role: "Backup and isolated cyber-recovery vault for AI data and models", domains: [BCR]}
+  - {layer: Facilities, component: Dell Integrated Rack Scalable Systems / liquid cooling, role: "Pre-integrated, high-density racks with direct liquid cooling options", domains: [FAC]}
+  - {layer: Services, component: Dell Professional Services / ProSupport / APEX, role: "Design, deployment, managed services and as-a-service consumption", domains: [ORG, OPS, FIN]}
