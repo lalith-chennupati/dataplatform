@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Trino CLI inside the lab container. Usage: bin/trino --execute "SELECT 1"   or   bin/trino < file.sql   or   bin/trino (interactive)
+set -euo pipefail
+cd "$(dirname "$0")/.."
+if [ -t 0 ]; then exec docker compose exec trino trino "$@"; else exec docker compose exec -T trino trino "$@"; fi
