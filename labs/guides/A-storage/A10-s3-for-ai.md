@@ -14,7 +14,7 @@ docker run -d --name trainer --network aifactory-lab_default \
   -e AWS_REQUEST_CHECKSUM_CALCULATION=when_required -e AWS_RESPONSE_CHECKSUM_VALIDATION=when_required \
   -e S3_ENDPOINT=http://s3:8333 mirror.gcr.io/library/python:3.12-slim sleep infinity
 docker exec trainer pip install -q torch --index-url https://download.pytorch.org/whl/cpu
-docker exec trainer pip install -q boto3
+docker exec trainer pip install -q boto3 numpy
 ```
 DEMO/HW: run the same on a GPU node with `S3_ENDPOINT=$OBJ` and the IAM user's keys.
 
@@ -23,7 +23,7 @@ DEMO/HW: run the same on a GPU node with `S3_ENDPOINT=$OBJ` and the IAM user's k
 docker exec -i trainer python - <<'PY'
 import io, os, time, boto3, torch, torch.nn as nn
 s3 = boto3.client("s3", endpoint_url=os.environ["S3_ENDPOINT"])
-model = nn.Sequential(nn.Linear(1024, 4096), nn.ReLU(), nn.Linear(4096, 1024))   # ~33 MB of weights
+model = nn.Sequential(nn.Linear(1024, 4096), nn.ReLU(), nn.Linear(4096, 1024))   # ~32 MiB of weights; ~96 MiB checkpoint with AdamW state
 opt = torch.optim.AdamW(model.parameters())
 for step in range(1, 31):
     loss = model(torch.randn(64, 1024)).pow(2).mean(); opt.zero_grad(); loss.backward(); opt.step()
