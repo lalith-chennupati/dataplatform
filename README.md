@@ -11,6 +11,7 @@ Enterprise standards for the Dell AI Factory and Dell AI Data Platform.
 | `questionnaire/ai-factory-standards-questionnaire.docx` | Interview / workshop edition (landscape, one domain per page) |
 | `questionnaire/ai-factory-standards-questionnaire.md` | GitHub-readable edition |
 | `tools/build_questionnaire.py` | Regenerates the three editions from the YAML |
+| `labs/README.md` | Lab catalog: 43 hands-on labs across Dell AI Factory and AI Data Platform features, with environment tier (SIM / DEMO / HW) and the questionnaire domains each lab informs |
 
 ## How the questionnaire is used
 
