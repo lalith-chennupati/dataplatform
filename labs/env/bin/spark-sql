@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# spark-sql with the Iceberg REST catalog "lake" pointed at the lab S3. Extra args are passed to spark-sql.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+set -a; . ./.env; set +a
+PKGS="org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.9.2,org.apache.iceberg:iceberg-aws-bundle:1.9.2"
+tty=-T; [ -t 0 ] && tty=
+exec docker compose --profile spark exec $tty spark /opt/spark/bin/spark-sql \
+  --packages "$PKGS" \
+  --repositories "${MAVEN_MIRROR:-https://repo1.maven.org/maven2}" \
+  --conf spark.jars.ivy=/root/.ivy2 \
+  --conf spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions \
+  --conf spark.sql.catalog.lake=org.apache.iceberg.spark.SparkCatalog \
+  --conf spark.sql.catalog.lake.type=rest \
+  --conf spark.sql.catalog.lake.uri=http://iceberg-rest:8181 \
+  --conf spark.sql.catalog.lake.warehouse=s3://warehouse/ \
+  --conf spark.sql.catalog.lake.io-impl=org.apache.iceberg.aws.s3.S3FileIO \
+  --conf spark.sql.catalog.lake.s3.endpoint=http://s3:8333 \
+  --conf spark.sql.catalog.lake.s3.path-style-access=true \
+  --conf spark.sql.catalog.lake.client.region="$S3_REGION" \
+  --conf spark.sql.defaultCatalog=lake \
+  "$@"
