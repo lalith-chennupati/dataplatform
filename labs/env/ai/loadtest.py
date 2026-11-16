@@ -51,7 +51,7 @@ if __name__ == "__main__":
     for c in map(int, a.concurrency.split(",")):
         t0 = time.perf_counter()
         with ThreadPoolExecutor(c) as ex:
-            res = list(ex.map(lambda i: one(a, i), range(a.requests)))
+            res = list(ex.map(lambda i: one(a, i), range(max(a.requests, c))))
         wall = time.perf_counter() - t0
         lat, ttft, tok = zip(*res)
         print(f"{c:>4} {len(res) / wall:6.2f} {sum(tok) / wall:7.1f} {statistics.median(lat):6.2f} {pct(lat, 95):6.2f} {pct(ttft, 95):10.2f}")
