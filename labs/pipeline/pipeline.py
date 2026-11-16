@@ -129,8 +129,9 @@ def run_spark(env):
 
 def releases(env):
     c, out = s3(), []
-    for o in c.list_objects_v2(Bucket=CFG["releases_bucket"], Prefix=f"{env}/").get("Contents", []):
-        out.append(json.loads(c.get_object(Bucket=CFG["releases_bucket"], Key=o["Key"])["Body"].read()))
+    for page in c.get_paginator("list_objects_v2").paginate(Bucket=CFG["releases_bucket"], Prefix=f"{env}/"):
+        for o in page.get("Contents", []):
+            out.append(json.loads(c.get_object(Bucket=CFG["releases_bucket"], Key=o["Key"])["Body"].read()))
     return sorted(out, key=lambda r: r["finished_at"])
 
 
@@ -209,7 +210,12 @@ def deploy(args):
     rel["snapshots_after"] = snapshots(cur, env)
     rel["rows"] = {t: q(cur, f"SELECT count(*) FROM {t}")[0][0] for t in rel["snapshots_after"]}
     rel["status"] = "passed"
-    record(rel)
+    try:
+        record(rel)
+    except Exception as e:  # outputs without a release record would break promotion and rollback history
+        print(f"could not write the release record ({e}): restoring {env} outputs", file=sys.stderr)
+        restore(cur, rel["snapshots_before"])
+        sys.exit(1)
 
 
 def snapshots_of(cur, table):
@@ -228,16 +234,25 @@ def status(_):
             print(f"{env:5} (never deployed)")
 
 
+def live_chain(rs):
+    """Releases whose outputs are, in order, the ancestry of what is live now. A rollback pops back to its target."""
+    chain = []
+    for r in rs:
+        if r["status"] == "passed":
+            chain.append(r)
+        elif r["status"] == "rolled-back":
+            while chain and chain[-1]["finished_at"] != r["release_finished_at"]:
+                chain.pop()
+    return chain
+
+
 def rollback(args):
     env = args.env
-    live = [r for r in releases(env) if r["status"] in ("passed", "rolled-back")]
-    if not live:
+    chain = live_chain(releases(env))
+    if not chain:
         sys.exit(f"nothing deployed to {env}")
-    current = live[-1]
-    # After a rollback, "current" is an older release: only go further back from its original deploy time.
-    cutoff = current.get("release_finished_at", current["finished_at"])
-    targets = [r for r in live[:-1] if r["status"] == "passed" and r["git_sha"] != current["git_sha"]
-               and (r["git_sha"].startswith(args.to) if args.to else r["finished_at"] < cutoff)]
+    current = chain[-1]
+    targets = [r for r in chain[:-1] if not args.to or r["git_sha"].startswith(args.to)]
     if not targets:
         sys.exit(f"no earlier passed release{' ' + args.to if args.to else ''} in {env} to roll back to")
     target = targets[-1]
@@ -248,7 +263,7 @@ def rollback(args):
     for t in sorted(extra):
         print(f"  kept {t}: not part of {short(target['git_sha'])} (additive migration, unused by that release)")
     record({**target, "status": "rolled-back", "rolled_back_from": current["git_sha"], "approved_by": args.approved_by,
-            "release_finished_at": target.get("release_finished_at", target["finished_at"])})
+            "release_finished_at": target["finished_at"]})
 
 
 def destroy(args):
