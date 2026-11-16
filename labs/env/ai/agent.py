@@ -45,7 +45,7 @@ if __name__ == "__main__":
     ap.add_argument("question"); ap.add_argument("--user", required=True); ap.add_argument("--groups", required=True)
     a = ap.parse_args()
     (HERE / "traces").mkdir(exist_ok=True)
-    trace = open(HERE / "traces" / f"agent-{int(time.time())}.jsonl", "w")
+    trace = open(HERE / "traces" / f"agent-{time.time_ns()}-{os.getpid()}.jsonl", "x")
     log = lambda **e: (trace.write(json.dumps(dict(e, ts=time.time(), user=a.user), default=str) + "\n"), trace.flush())
     msgs = [{"role": "system", "content": "You are a read-only analyst. Never show SQL to the user: call run_sql to get numbers and "
              "search_docs to get policy text, one tool call per sub-question, then answer briefly from the tool results. "
