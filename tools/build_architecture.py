@@ -6,12 +6,13 @@
 
 Rendering uses Mermaid CLI: `mmdc` on PATH, $MMDC, or `npx -y @mermaid-js/mermaid-cli`.
 """
-import argparse, os, pathlib, re, shutil, subprocess, sys
+import argparse, hashlib, json, os, pathlib, re, shutil, subprocess, sys
 import yaml
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 ARCH = ROOT / "architecture"
 DIAG = ARCH / "diagrams"
+MANIFEST = DIAG / "rendered.json"  # source hash of each diagram at its last render
 SPEC = yaml.safe_load((ARCH / "data-products.yaml").read_text())
 QUESTIONS = yaml.safe_load((ROOT / "questionnaire/questions.yaml").read_text())
 QIDS = {f"{d['code']}-{i:02d}" for d in QUESTIONS["domains"] for i, _ in enumerate(d["questions"], 1)}
@@ -150,14 +151,21 @@ def mmdc():
     sys.exit("Mermaid CLI not found: npm i -g @mermaid-js/mermaid-cli, or set MMDC")
 
 
+def source_hash(src):
+    return hashlib.sha256(src.read_bytes() + (DIAG / "mermaid.config.json").read_bytes()).hexdigest()[:16]
+
+
 def render():
     cfg = DIAG / "mermaid.config.json"
+    done = {}
     for src in sorted(DIAG.glob("*.mmd")):
         for ext, extra in (("svg", []), ("png", ["-s", "2"])):
             out = src.with_suffix(f".{ext}")
             subprocess.run(mmdc() + ["-q", "-i", str(src), "-o", str(out), "-c", str(cfg), "-b", "white"] + extra,
                            check=True)
             print(f"rendered {out.relative_to(ROOT)}")
+        done[src.name] = source_hash(src)
+    MANIFEST.write_text(json.dumps(done, indent=2) + "\n")
 
 
 def main():
@@ -171,8 +179,10 @@ def main():
     files = {DIAG / "02-domain-product-map.mmd": domain_map(), ARCH / "data-product-catalog.md": catalog()}
     if args.check:
         stale = [str(f.relative_to(ROOT)) for f, text in files.items() if not f.exists() or f.read_text() != text]
-        stale += [str(s.relative_to(ROOT)) + " has no .svg/.png" for s in DIAG.glob("*.mmd")
-                  if not (s.with_suffix(".svg").exists() and s.with_suffix(".png").exists())]
+        rendered = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {}
+        stale += [str(s.relative_to(ROOT)) + " changed since its .svg/.png were rendered" for s in sorted(DIAG.glob("*.mmd"))
+                  if rendered.get(s.name) != source_hash(s)
+                  or not (s.with_suffix(".svg").exists() and s.with_suffix(".png").exists())]
         if stale:
             sys.exit("stale (run with --render): " + ", ".join(stale))
         print("architecture OK")

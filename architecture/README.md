@@ -13,7 +13,7 @@ Everything here is a **sample** ("Acme"). Use it as a starting draft in the ques
 | [`data-products.yaml`](data-products.yaml) | Source of truth: naming conventions, sources, domains, data products, consumers |
 | [`data-product-catalog.md`](data-product-catalog.md) | Generated catalog: one contract table per data product |
 | [`diagrams/*.mmd`](diagrams/) | Mermaid sources (plain text, editable, displayed by GitHub) |
-| `diagrams/*.svg`, `diagrams/*.png` | Rendered diagrams for documents and slides |
+| `diagrams/*.svg`, `diagrams/*.png` | Rendered diagrams for documents and slides; `diagrams/rendered.json` records which source each was rendered from, so `--check` catches stale images |
 | [`../tools/build_architecture.py`](../tools/build_architecture.py) | Validates the YAML, regenerates the catalog and diagram 02, renders all diagrams |
 
 ## Diagrams
