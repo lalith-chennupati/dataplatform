@@ -1,10 +1,10 @@
 """Lab C06: check a back-end fabric design (design.yaml) for port budget, oversubscription and RoCE QoS policy."""
-import sys, yaml
+import math, sys, yaml
 
 d = yaml.safe_load(open(sys.argv[1] if len(sys.argv) > 1 else "fabric/design.yaml"))
 p, q, leaf, spine = d["policy"], d["qos"], d["leaf"], d["spine"]
 errors, gpus = [], d["gpu_nodes"] * d["gpus_per_node"]
-down = gpus // leaf["count"]                                  # GPU-facing ports per leaf
+down = math.ceil(gpus / leaf["count"])                        # GPU-facing ports on the busiest leaf
 up_ports = leaf["ports"] - down
 up = min(up_ports, spine["count"] * (up_ports // spine["count"]))  # uplinks spread evenly over spines
 over = (down * d["nic_gbps_per_gpu"]) / max(up * spine["port_gbps"], 1)
