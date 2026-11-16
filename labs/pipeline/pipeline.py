@@ -14,7 +14,8 @@ import boto3, trino, yaml
 HERE = pathlib.Path(__file__).resolve().parent
 ENV_DIR = HERE.parent / "env"
 CFG = yaml.safe_load((HERE / "environments.yaml").read_text())
-DOTENV = dict(l.split("=", 1) for l in (ENV_DIR / ".env").read_text().splitlines() if "=" in l and not l.startswith("#"))
+DOTENV_FILE = ENV_DIR / ".env"   # lab only; CI sets the AIDP_* variables instead
+DOTENV = dict(l.split("=", 1) for l in DOTENV_FILE.read_text().splitlines() if "=" in l and not l.startswith("#")) if DOTENV_FILE.exists() else {}
 # Lab endpoints by default; CI runners in each environment override them.
 TRINO = (os.environ.get("AIDP_TRINO_HOST", "localhost"), int(os.environ.get("AIDP_TRINO_PORT", "8080")))
 S3_URL = os.environ.get("AIDP_S3_ENDPOINT", "http://localhost:8333")
@@ -29,8 +30,10 @@ def secret_for(account):
 
 
 def s3():
-    return boto3.client("s3", endpoint_url=S3_URL, region_name=DOTENV["S3_REGION"],
-                        aws_access_key_id=DOTENV["S3_ACCESS_KEY"], aws_secret_access_key=DOTENV["S3_SECRET_KEY"])
+    # Platform identity for buckets and release records: AIDP_S3_* in CI, the lab .env otherwise.
+    env = lambda k, default=None: os.environ.get(f"AIDP_{k}", DOTENV.get(k, default))
+    return boto3.client("s3", endpoint_url=S3_URL, region_name=env("S3_REGION", "us-east-1"),
+                        aws_access_key_id=env("S3_ACCESS_KEY"), aws_secret_access_key=env("S3_SECRET_KEY"))
 
 
 def ensure_buckets():

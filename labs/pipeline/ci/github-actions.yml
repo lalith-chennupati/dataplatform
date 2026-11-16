@@ -27,6 +27,9 @@ jobs:
       AIDP_TRINO_HOST: ${{ vars.AIDP_TRINO_HOST }}
       AIDP_TRINO_PORT: ${{ vars.AIDP_TRINO_PORT }}
       AIDP_S3_ENDPOINT: ${{ vars.AIDP_S3_ENDPOINT }}
+      AIDP_S3_REGION: ${{ vars.AIDP_S3_REGION }}
+      AIDP_S3_ACCESS_KEY: ${{ vars.AIDP_RELEASES_ACCESS_KEY }}     # identity that writes release records
+      AIDP_S3_SECRET_KEY: ${{ secrets.AIDP_RELEASES_SECRET_KEY }}
     steps:
       - uses: actions/checkout@v4
       - run: python3 labs/pipeline/pipeline.py deploy --env dev

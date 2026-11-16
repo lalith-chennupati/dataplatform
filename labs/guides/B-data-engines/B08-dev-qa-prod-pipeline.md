@@ -206,7 +206,7 @@ SELECT made_current_at, snapshot_id, is_current_ancestor FROM iceberg.prod_consu
 Each release JSON connects the commit, the approver, the input snapshot of `prod_raw.orders_events`, the output snapshots and the DQ results. That is the lineage chain `DAT-07` asks about, at table level.
 
 ### Step 12 - Automate it with CI/CD
-[ci/github-actions.yml](../../pipeline/ci/github-actions.yml) is an example workflow: on a push to `main`, run tests, deploy to dev, then QA, then wait for a required reviewer on the `production` environment before deploying to prod. It runs on one self-hosted runner per environment, and takes each environment's endpoints (`AIDP_TRINO_HOST`, `AIDP_TRINO_PORT`, `AIDP_S3_ENDPOINT`) and service-account secret (`AIDP_SVC_<ENV>_SECRET`) from GitHub Environment variables and secrets. **Not tested in this repo**; it is a starting point.
+[ci/github-actions.yml](../../pipeline/ci/github-actions.yml) is an example workflow: on a push to `main`, run tests, deploy to dev, then QA, then wait for a required reviewer on the `production` environment before deploying to prod. It runs on one self-hosted runner per environment, and takes each environment's endpoints (`AIDP_TRINO_HOST`, `AIDP_TRINO_PORT`, `AIDP_S3_ENDPOINT`) service-account secret (`AIDP_SVC_<ENV>_SECRET`) and the release-record identity (`AIDP_S3_ACCESS_KEY`, `AIDP_S3_SECRET_KEY`) from GitHub Environment variables and secrets. **Not tested in this repo**; it is a starting point.
 
 The same gates in other CI/CD tools:
 
