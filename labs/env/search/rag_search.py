@@ -27,21 +27,22 @@ def chunks(text, size=40, overlap=10):
 
 
 def ingest(_):
+    docs = []
+    for line in open(HERE / "corpus.jsonl"):
+        d = json.loads(line)
+        for i, c in enumerate(chunks(d["text"])):
+            docs.append((f"{d['id']}#{i}", {"doc_id": d["id"], "title": d["title"], "path": d["path"], "acl": d["acl"],
+                                            "text": c, "vector": embed(f"{d['title']}. {c}")}))
+    # embed everything first so a failed embedding run leaves the existing index intact
     ES.indices.delete(index=INDEX, ignore_unavailable=True)
     ES.indices.create(index=INDEX, mappings={"properties": {
         "doc_id": {"type": "keyword"}, "title": {"type": "text"}, "path": {"type": "keyword"},
         "acl": {"type": "keyword"}, "text": {"type": "text"},
-        "vector": {"type": "dense_vector", "dims": len(embed("probe")), "index": True, "similarity": "cosine"}}})
-    n = 0
-    for line in open(HERE / "corpus.jsonl"):
-        d = json.loads(line)
-        for i, c in enumerate(chunks(d["text"])):
-            ES.index(index=INDEX, id=f"{d['id']}#{i}", document={
-                "doc_id": d["id"], "title": d["title"], "path": d["path"], "acl": d["acl"],
-                "text": c, "vector": embed(f"{d['title']}. {c}")})
-            n += 1
+        "vector": {"type": "dense_vector", "dims": len(docs[0][1]["vector"]), "index": True, "similarity": "cosine"}}})
+    for doc_id, doc in docs:
+        ES.index(index=INDEX, id=doc_id, document=doc)
     ES.indices.refresh(index=INDEX)
-    print(f"indexed {n} chunks")
+    print(f"indexed {len(docs)} chunks")
 
 
 def search(q, groups, mode="hybrid", k=3):
