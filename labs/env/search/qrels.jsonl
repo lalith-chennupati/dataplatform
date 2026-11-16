@@ -1,0 +1,10 @@
+{"q": "how much can I spend on a hotel", "relevant": "fin-001"}
+{"q": "when do GPU cloud accruals need to be booked", "relevant": "fin-002"}
+{"q": "how are business units billed for GPU time", "relevant": "fin-004"}
+{"q": "where are LoRA checkpoints saved", "relevant": "res-001"}
+{"q": "what is required before a dataset can be used for training", "relevant": "res-002"}
+{"q": "how do we measure retrieval quality", "relevant": "res-003"}
+{"q": "steps to swap a broken GPU server", "relevant": "ops-001"}
+{"q": "is storage traffic separated from compute traffic", "relevant": "ops-002"}
+{"q": "what to do after a ransomware attack", "relevant": "ops-003"}
+{"q": "when does the change freeze start", "relevant": "ops-004"}

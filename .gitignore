@@ -2,3 +2,8 @@ __pycache__/
 *.pyc
 .venv/
 ~$*
+labs/env/ai/adapters/
+labs/env/ai/traces/
+labs/env/ops/.e02-seed.json
+labs/env/ops/.*.db
+labs/evidence/*.zip

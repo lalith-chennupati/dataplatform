@@ -141,8 +141,18 @@ services:
   prometheus:
     image: ${REGISTRY}/prom/prometheus:latest
     profiles: [obs]
-    volumes: [./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro]
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
     ports: ["9090:9090"]
+
+  telemetry:
+    image: ${REGISTRY}/library/python:3.12-slim
+    profiles: [obs]
+    command: ["python", "/opt/sim_exporter.py"]
+    environment: {REDFISH_URL: "http://redfish:8000/redfish/v1"}
+    volumes: [./telemetry/sim_exporter.py:/opt/sim_exporter.py:ro]
+    ports: ["127.0.0.1:9101:9101"]      # /fault is unauthenticated: keep it off the network
 
   grafana:
     image: ${REGISTRY}/grafana/grafana:latest
@@ -150,6 +160,7 @@ services:
     environment:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+    volumes: [./grafana/provisioning:/etc/grafana/provisioning:ro]
     ports: ["3000:3000"]
 
 volumes:

@@ -1,0 +1,12 @@
+{"prompt": "What is the hotel limit in tier-one cities?", "completion": "250 USD per night, per the travel expense policy (fin-001)."}
+{"prompt": "Who owns the GPU node replacement procedure?", "completion": "The platform team owns it (ops-001)."}
+{"prompt": "Where are LoRA checkpoints written?", "completion": "To the checkpoints bucket on ObjectScale, every N steps (res-001)."}
+{"prompt": "What PFC priority does the back-end fabric use?", "completion": "Priority 3 for RoCEv2 traffic."}
+{"prompt": "How are GPU quotas shared?", "completion": "Each team has a guaranteed quota and may borrow idle GPUs in the ai-factory cohort."}
+{"prompt": "What happens to a job that borrowed GPUs when the owner returns?", "completion": "It is preempted and requeued, and resumes from its last checkpoint."}
+{"prompt": "Which table holds curated orders?", "completion": "iceberg.curated.orders_clean."}
+{"prompt": "Who may read the Q3 revenue forecast?", "completion": "Only the finance-leadership group (fin-003)."}
+{"prompt": "What is the minimum MTU on the back-end fabric?", "completion": "9000 bytes on hosts, larger on switches."}
+{"prompt": "How long are snapshots kept in production?", "completion": "At least 7 days; the 0s retention is lab-only."}
+{"prompt": "What does XID 79 mean?", "completion": "The GPU fell off the bus; drain the node and open a support case."}
+{"prompt": "Which group can read the dataset onboarding standard?", "completion": "research and all-staff (res-002)."}

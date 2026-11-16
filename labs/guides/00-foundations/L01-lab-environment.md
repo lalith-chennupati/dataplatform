@@ -17,7 +17,7 @@
 | DMTF Redfish Mockup Server | iDRAC Redfish API | `http://localhost:8000` | infra |
 | Ollama (CPU) | NIM / LLM + embedding endpoint (OpenAI-compatible) | `http://localhost:11434` | ai |
 | MLflow 2.22 | Model registry / tracking | `http://localhost:5000` | ai |
-| Prometheus + Grafana | Observability / AIOps | `:9090`, `:3000` | obs |
+| Prometheus + Grafana + `telemetry` (simulated iDRAC/DCGM/storage/switch exporter) | Observability / AIOps | `:9090`, `:3000`, `:9101` | obs |
 | kind (3 nodes) | Kubernetes / OpenShift | `kubectl --context kind-aifactory-lab` | n/a |
 | PowerScale OneFS Simulator *(optional)* | PowerScale | `$PS` | n/a (VM) |
 
@@ -54,6 +54,7 @@ make up-all                             # everything (~10 GB RAM)
 For Track D, pull the CPU models once:
 ```bash
 docker compose exec ollama ollama pull qwen2.5:0.5b        # small chat model
+docker compose exec ollama ollama pull qwen2.5:1.5b        # used by Trino AI functions (B05)
 docker compose exec ollama ollama pull nomic-embed-text    # 768-dim embeddings
 ```
 
@@ -101,7 +102,7 @@ Expected: one control-plane and two workers labelled `pool=cpu` and `pool=gpu-si
 ### Step 7 - Install the automation tooling
 ```bash
 python3 -m venv ~/.venvs/aif && . ~/.venvs/aif/bin/activate
-pip install ansible-core boto3 requests elasticsearch==8.15.1 mlflow==2.22.0 scikit-learn
+pip install ansible-core boto3 requests elasticsearch==8.15.1 mlflow==2.22.0 scikit-learn trino
 ansible-galaxy collection install dellemc.powerscale dellemc.openmanage
 # Terraform 1.6+ from https://developer.hashicorp.com/terraform/install for A05
 ```

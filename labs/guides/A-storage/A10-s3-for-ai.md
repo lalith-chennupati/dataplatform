@@ -78,7 +78,7 @@ If your ObjectScale release and client stack support S3 over RDMA, follow Dell's
 - [ ] The artefact key layout is agreed.
 
 ## Record for the standards
-`MLO-04` mandatory artefact metadata/layout. `BCR-07` checkpoint policy. `STO-04` object throughput targets.
+`MLO-03` registry and artefact layout. `BCR-07` checkpoint policy. `STO-04` object throughput targets.
 
 ## Cleanup
 ```bash

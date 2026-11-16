@@ -9,6 +9,8 @@ This catalog lists hands-on labs that cover the features of the **Dell AI Factor
 
 > **Naming caveat.** Product and feature names come from Dell's public portfolio as it stood when this catalog was written. Dell renames and re-bundles AIDP components often. For example, the Data Analytics Engine is Starburst/Trino based, the Data Processing Engine is Spark based and the Data Search Engine is Elastic based. Check names, versions and feature availability with your Dell account team or the Dell Demo Center before you build a lab.
 
+Step-by-step instructions for every lab are in [guides/README.md](guides/README.md); click a lab ID in the tables below to open its guide.
+
 ## Environment tiers
 
 | Tier | Meaning | Typical options |
@@ -40,55 +42,55 @@ Suggested order for a first pass: L00 → L01 → A01 → A09 → B01 → B02 �
 
 | ID | Lab | Key Dell features | Tier | Time | Domains |
 |---|---|---|---|---|---|
-| L00 | AI Factory & AIDP architecture orientation | Dell AI Factory reference designs, AIDP storage/data engine split | Paper | 2h | STR, ARC |
-| L01 | Build the lab environment | OneFS Simulator, Kubernetes, OSS engine stand-ins | SIM | 4h | PLT |
+| [L00](guides/00-foundations/L00-orientation.md) | AI Factory & AIDP architecture orientation | Dell AI Factory reference designs, AIDP storage/data engine split | Paper | 2h | STR, ARC |
+| [L01](guides/00-foundations/L01-lab-environment.md) | Build the lab environment | OneFS Simulator, Kubernetes, OSS engine stand-ins | SIM | 4h | PLT |
 | **Track A - Storage engines** | | | | | |
-| A01 | PowerScale OneFS fundamentals | Cluster, SmartConnect, NFS/SMB/S3/HDFS multiprotocol | SIM | 3h | STO |
-| A02 | Multi-tenancy with access zones & quotas | Access zones, SmartQuotas, OneFS RBAC, AD/LDAP providers | SIM | 3h | STO, SEC, FIN |
-| A03 | Snapshots, replication & WORM | SnapshotIQ, SyncIQ, SmartLock | SIM | 3h | STO, BCR |
-| A04 | Tiering hot -> cold | SmartPools, file pool policies, CloudPools to S3 | SIM / HW | 3h | STO, FIN |
-| A05 | PowerScale automation as code | OneFS REST API (PAPI), Ansible `dellemc.powerscale`, Terraform `dell/powerscale` | SIM | 3h | PLT, ARC |
-| A06 | PowerScale for Kubernetes AI jobs | CSI PowerScale, Container Storage Modules (Authorization, Observability, Replication) | SIM | 4h | STO, PLT |
-| A07 | High-performance AI data path | NFS over RDMA, nconnect, NVIDIA GPUDirect Storage | HW | 4h | STO, CMP, NET |
-| A08 | Discover AI-ready data with metadata | PowerScale MetadataIQ, file metadata indexing to search | DEMO / HW | 3h | DAT, STO |
-| A09 | ObjectScale S3 fundamentals | Buckets, IAM users/policies, versioning, object lock, lifecycle | DEMO / SIM* | 3h | STO, SEC |
-| A10 | S3 for AI workloads | Checkpoints and model artefacts on ObjectScale, multipart tuning, S3 over RDMA (where available) | SIM / HW | 3h | STO, MLO |
+| [A01](guides/A-storage/A01-onefs-fundamentals.md) | PowerScale OneFS fundamentals | Cluster, SmartConnect, NFS/SMB/S3/HDFS multiprotocol | SIM | 3h | STO |
+| [A02](guides/A-storage/A02-access-zones-quotas.md) | Multi-tenancy with access zones & quotas | Access zones, SmartQuotas, OneFS RBAC, AD/LDAP providers | SIM | 3h | STO, SEC, FIN |
+| [A03](guides/A-storage/A03-snapshots-replication-worm.md) | Snapshots, replication & WORM | SnapshotIQ, SyncIQ, SmartLock | SIM | 3h | STO, BCR |
+| [A04](guides/A-storage/A04-tiering.md) | Tiering hot -> cold | SmartPools, file pool policies, CloudPools to S3 | SIM / HW | 3h | STO, FIN |
+| [A05](guides/A-storage/A05-powerscale-automation.md) | PowerScale automation as code | OneFS REST API (PAPI), Ansible `dellemc.powerscale`, Terraform `dell/powerscale` | SIM | 3h | PLT, ARC |
+| [A06](guides/A-storage/A06-powerscale-kubernetes.md) | PowerScale for Kubernetes AI jobs | CSI PowerScale, Container Storage Modules (Authorization, Observability, Replication) | SIM | 4h | STO, PLT |
+| [A07](guides/A-storage/A07-hpc-data-path.md) | High-performance AI data path | NFS over RDMA, nconnect, NVIDIA GPUDirect Storage | HW | 4h | STO, CMP, NET |
+| [A08](guides/A-storage/A08-metadata-discovery.md) | Discover AI-ready data with metadata | PowerScale MetadataIQ, file metadata indexing to search | DEMO / HW | 3h | DAT, STO |
+| [A09](guides/A-storage/A09-objectscale-s3.md) | ObjectScale S3 fundamentals | Buckets, IAM users/policies, versioning, object lock, lifecycle | DEMO / SIM* | 3h | STO, SEC |
+| [A10](guides/A-storage/A10-s3-for-ai.md) | S3 for AI workloads | Checkpoints and model artefacts on ObjectScale, multipart tuning, S3 over RDMA (where available) | SIM / HW | 3h | STO, MLO |
 | **Track B - Data engines** | | | | | |
-| B01 | Federated SQL with the Data Analytics Engine | Starburst/Trino connectors, federation across RDBMS + S3 + PowerScale | SIM / DEMO | 3h | LAK |
-| B02 | Iceberg lakehouse on ObjectScale | Apache Iceberg tables, catalog, time travel, schema evolution, compaction | SIM | 4h | LAK, DAT |
-| B03 | Lakehouse governance | Role-based access, row filters, column masks, audit (Starburst built-in access control) | DEMO / SIM | 3h | LAK, SEC, PRV |
-| B04 | Data prep with the Data Processing Engine | Spark on Kubernetes, bronze/silver/gold pipelines, optional GPU (RAPIDS) | SIM / HW | 4h | ING, LAK |
-| B05 | AI-assisted analytics | Natural-language-to-SQL, AI SQL functions, MCP access to the analytics engine | DEMO | 2h | LAK, AGT |
-| B06 | Unstructured search with the Data Search Engine | Elastic-based ingestion of PowerScale content, hybrid keyword + vector search, document-level security | SIM / DEMO | 4h | RAG, SEC |
-| B07 | GPU-accelerated vector indexing | NVIDIA cuVS / GPU index build vs. CPU baseline | HW | 3h | RAG, CMP |
+| [B01](guides/B-data-engines/B01-federated-sql.md) | Federated SQL with the Data Analytics Engine | Starburst/Trino connectors, federation across RDBMS + S3 + PowerScale | SIM / DEMO | 3h | LAK |
+| [B02](guides/B-data-engines/B02-iceberg-lakehouse.md) | Iceberg lakehouse on ObjectScale | Apache Iceberg tables, catalog, time travel, schema evolution, compaction | SIM | 4h | LAK, DAT |
+| [B03](guides/B-data-engines/B03-lakehouse-governance.md) | Lakehouse governance | Role-based access, row filters, column masks, audit (Starburst built-in access control) | DEMO / SIM | 3h | LAK, SEC, PRV |
+| [B04](guides/B-data-engines/B04-data-processing-spark.md) | Data prep with the Data Processing Engine | Spark on Kubernetes, bronze/silver/gold pipelines, optional GPU (RAPIDS) | SIM / HW | 4h | ING, LAK |
+| [B05](guides/B-data-engines/B05-ai-assisted-analytics.md) | AI-assisted analytics | Natural-language-to-SQL, AI SQL functions, MCP access to the analytics engine | DEMO | 2h | LAK, AGT |
+| [B06](guides/B-data-engines/B06-unstructured-search.md) | Unstructured search with the Data Search Engine | Elastic-based ingestion of PowerScale content, hybrid keyword + vector search, document-level security | SIM / DEMO | 4h | RAG, SEC |
+| [B07](guides/B-data-engines/B07-gpu-vector-indexing.md) | GPU-accelerated vector indexing | NVIDIA cuVS / GPU index build vs. CPU baseline | HW | 3h | RAG, CMP |
 | **Track C - Compute, fabric & infrastructure** | | | | | |
-| C01 | PowerEdge lifecycle with iDRAC & Redfish | iDRAC Redfish API, inventory, firmware, telemetry streaming, secure boot, lockdown mode | SIM / HW | 3h | CMP, SEC |
-| C02 | Fleet management with OpenManage Enterprise | Discovery, deployment templates, firmware baselines, compliance, Ansible `dellemc.openmanage` | DEMO / HW | 3h | OPS, PLT |
-| C03 | Bare-metal AI cluster with Omnia | Dell Omnia provisioning of Kubernetes / Slurm, GPU drivers, node groups | SIM (VMs) / HW | 6h | PLT, CMP |
-| C04 | GPUs on Kubernetes | NVIDIA GPU Operator, MIG, time-slicing, DCGM exporter on PowerEdge XE | HW | 4h | CMP, PLT |
-| C05 | GPU scheduling, quotas & fair share | Kueue or Run:ai queues, Slurm partitions, pre-emption | SIM / HW | 3h | CMP, FIN |
-| C06 | AI network fabric | Rail-optimised design, RoCE QoS (PFC/ECN), Dell Enterprise SONiC / Spectrum-X configuration, NCCL tests | SIM (SONiC VS) / HW | 4h | NET |
-| C07 | Rack-scale & facilities readiness | Dell Integrated Rack Scalable Systems, power/cooling (DLC) sizing, site checklist | Paper / DEMO | 2h | FAC |
-| C08 | Infrastructure telemetry & AIOps | iDRAC telemetry, DCGM, OneFS metrics, APEX AIOps (CloudIQ) health and capacity | SIM / DEMO | 3h | OPS |
+| [C01](guides/C-infrastructure/C01-idrac-redfish.md) | PowerEdge lifecycle with iDRAC & Redfish | iDRAC Redfish API, inventory, firmware, telemetry streaming, secure boot, lockdown mode | SIM / HW | 3h | CMP, SEC |
+| [C02](guides/C-infrastructure/C02-openmanage-enterprise.md) | Fleet management with OpenManage Enterprise | Discovery, deployment templates, firmware baselines, compliance, Ansible `dellemc.openmanage` | DEMO / HW | 3h | OPS, PLT |
+| [C03](guides/C-infrastructure/C03-omnia-cluster.md) | Bare-metal AI cluster with Omnia | Dell Omnia provisioning of Kubernetes / Slurm, GPU drivers, node groups | SIM (VMs) / HW | 6h | PLT, CMP |
+| [C04](guides/C-infrastructure/C04-gpus-on-kubernetes.md) | GPUs on Kubernetes | NVIDIA GPU Operator, MIG, time-slicing, DCGM exporter on PowerEdge XE | HW | 4h | CMP, PLT |
+| [C05](guides/C-infrastructure/C05-gpu-scheduling-quotas.md) | GPU scheduling, quotas & fair share | Kueue or Run:ai queues, Slurm partitions, pre-emption | SIM / HW | 3h | CMP, FIN |
+| [C06](guides/C-infrastructure/C06-ai-network-fabric.md) | AI network fabric | Rail-optimised design, RoCE QoS (PFC/ECN), Dell Enterprise SONiC / Spectrum-X configuration, NCCL tests | SIM (SONiC VS) / HW | 4h | NET |
+| [C07](guides/C-infrastructure/C07-facilities-readiness.md) | Rack-scale & facilities readiness | Dell Integrated Rack Scalable Systems, power/cooling (DLC) sizing, site checklist | Paper / DEMO | 2h | FAC |
+| [C08](guides/C-infrastructure/C08-telemetry-aiops.md) | Infrastructure telemetry & AIOps | iDRAC telemetry, DCGM, OneFS metrics, APEX AIOps (CloudIQ) health and capacity | SIM / DEMO | 3h | OPS |
 | **Track D - AI software & workloads** | | | | | |
-| D01 | Serve an LLM with NVIDIA NIM | NVIDIA AI Enterprise, NIM on Kubernetes, OpenAI-compatible API, model cache on PowerScale | HW (API-only: SIM) | 3h | MLO, PLT |
-| D02 | Dell Enterprise Hub on Hugging Face | Dell-optimised model containers, deploy on PowerEdge, compare with NIM | HW | 3h | MLO |
-| D03 | End-to-end RAG on the AI Data Platform | PowerScale docs -> Data Search Engine / vector index -> NIM LLM -> citations | SIM / HW | 6h | RAG, MLO |
-| D04 | Fine-tune a model (LoRA) | NVIDIA NeMo or open-source PEFT, datasets on PowerScale, checkpoints on ObjectScale | HW | 6h | MLO, STO |
-| D05 | Guardrails & evaluation | NeMo Guardrails, RAG evaluation (groundedness, relevance), red-team prompts | SIM / HW | 4h | MLO, SEC, GOV |
-| D06 | Agentic AI on enterprise data | NVIDIA AI Blueprints (e.g. AI-Q / RAG blueprint), MCP tools over analytics + search engines | SIM / HW | 6h | AGT |
-| D07 | MLOps pipeline | MLflow registry with artefacts on ObjectScale, KServe / NIM deploy, GitOps promotion | SIM | 5h | MLO, PLT |
-| D08 | Red Hat OpenShift AI on Dell (optional) | OpenShift AI workbenches, model serving, CSI PowerScale | DEMO / HW | 5h | PLT, MLO |
-| D09 | AI PC and edge inference (optional) | Dell Pro AI Studio, on-device models, edge-to-core data sync | HW (AI PC) | 3h | CMP, ARC |
+| [D01](guides/D-ai-software/D01-nim-inference.md) | Serve an LLM with NVIDIA NIM | NVIDIA AI Enterprise, NIM on Kubernetes, OpenAI-compatible API, model cache on PowerScale | HW (API-only: SIM) | 3h | MLO, PLT |
+| [D02](guides/D-ai-software/D02-dell-enterprise-hub.md) | Dell Enterprise Hub on Hugging Face | Dell-optimised model containers, deploy on PowerEdge, compare with NIM | HW | 3h | MLO |
+| [D03](guides/D-ai-software/D03-rag-end-to-end.md) | End-to-end RAG on the AI Data Platform | PowerScale docs -> Data Search Engine / vector index -> NIM LLM -> citations | SIM / HW | 6h | RAG, MLO |
+| [D04](guides/D-ai-software/D04-fine-tuning-lora.md) | Fine-tune a model (LoRA) | NVIDIA NeMo or open-source PEFT, datasets on PowerScale, checkpoints on ObjectScale | HW | 6h | MLO, STO |
+| [D05](guides/D-ai-software/D05-guardrails-evaluation.md) | Guardrails & evaluation | NeMo Guardrails, RAG evaluation (groundedness, relevance), red-team prompts | SIM / HW | 4h | MLO, SEC, GOV |
+| [D06](guides/D-ai-software/D06-agentic-ai.md) | Agentic AI on enterprise data | NVIDIA AI Blueprints (e.g. AI-Q / RAG blueprint), MCP tools over analytics + search engines | SIM / HW | 6h | AGT |
+| [D07](guides/D-ai-software/D07-mlops-pipeline.md) | MLOps pipeline | MLflow registry with artefacts on ObjectScale, KServe / NIM deploy, GitOps promotion | SIM | 5h | MLO, PLT |
+| [D08](guides/D-ai-software/D08-openshift-ai.md) | Red Hat OpenShift AI on Dell (optional) | OpenShift AI workbenches, model serving, CSI PowerScale | DEMO / HW | 5h | PLT, MLO |
+| [D09](guides/D-ai-software/D09-ai-pc-edge.md) | AI PC and edge inference (optional) | Dell Pro AI Studio, on-device models, edge-to-core data sync | HW (AI PC) | 3h | CMP, ARC |
 | **Track E - Security, resilience, operations & FinOps** | | | | | |
-| E01 | Zero-trust security baseline | OneFS RBAC + AD, TLS everywhere, S3 IAM, CSM Authorization, Kubernetes RBAC, secrets | SIM | 4h | SEC |
-| E02 | Ransomware & cyber recovery | SmartLock, snapshot immutability, PowerScale cyber protection, PowerProtect Cyber Recovery vault | DEMO / HW | 4h | BCR, SEC |
-| E03 | Backup & restore of AI assets | PowerProtect Data Manager for Kubernetes namespaces, model weights, vector indexes | DEMO / HW | 3h | BCR |
-| E04 | DR drill for an AI service | SyncIQ failover/failback, re-deploy inference + RAG at DR site, RPO/RTO measurement | SIM / HW | 4h | BCR, OPS |
-| E05 | Chargeback & capacity | Quota reports, GPU-hour metering, mandatory labels, showback dashboard | SIM | 3h | FIN |
-| E06 | AI governance evidence | Model inventory, model cards, lineage, audit-log export for compliance | SIM | 3h | GOV, PRV |
+| [E01](guides/E-operations/E01-zero-trust-baseline.md) | Zero-trust security baseline | OneFS RBAC + AD, TLS everywhere, S3 IAM, CSM Authorization, Kubernetes RBAC, secrets | SIM | 4h | SEC |
+| [E02](guides/E-operations/E02-ransomware-cyber-recovery.md) | Ransomware & cyber recovery | SmartLock, snapshot immutability, PowerScale cyber protection, PowerProtect Cyber Recovery vault | DEMO / HW | 4h | BCR, SEC |
+| [E03](guides/E-operations/E03-backup-restore-ai-assets.md) | Backup & restore of AI assets | PowerProtect Data Manager for Kubernetes namespaces, model weights, vector indexes | DEMO / HW | 3h | BCR |
+| [E04](guides/E-operations/E04-dr-drill.md) | DR drill for an AI service | SyncIQ failover/failback, re-deploy inference + RAG at DR site, RPO/RTO measurement | SIM / HW | 4h | BCR, OPS |
+| [E05](guides/E-operations/E05-chargeback-capacity.md) | Chargeback & capacity | Quota reports, GPU-hour metering, mandatory labels, showback dashboard | SIM | 3h | FIN |
+| [E06](guides/E-operations/E06-ai-governance-evidence.md) | AI governance evidence | Model inventory, model cards, lineage, audit-log export for compliance | SIM | 3h | GOV, PRV |
 | **Capstone** | | | | | |
-| X01 | Standards-compliant AI Factory tenant | Onboard a tenant end-to-end against STD-01..STD-20 | SIM / HW | 1-2 days | All |
+| [X01](guides/X-capstone/X01-capstone-tenant.md) | Standards-compliant AI Factory tenant | Onboard a tenant end-to-end against STD-01..STD-20 | SIM / HW | 1-2 days | All |
 
 \* ObjectScale availability for self-hosted SIM varies. Use the Dell Demo Center or a trial if you can. Otherwise, run the S3 API steps against an S3-compatible stand-in (e.g. MinIO) and list which ObjectScale-specific features were not tested.
 

@@ -1,0 +1,70 @@
+# Lab C05: three teams share 8 GPUs in one cohort. Each team is guaranteed some GPUs and can borrow idle ones.
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ResourceFlavor
+metadata: {name: gpu-sim}
+spec:
+  nodeLabels: {pool: gpu-sim}
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: WorkloadPriorityClass
+metadata: {name: prod-inference}
+value: 1000
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: WorkloadPriorityClass
+metadata: {name: research}
+value: 100
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ClusterQueue
+metadata: {name: team-a}
+spec:
+  cohortName: ai-factory
+  namespaceSelector: {}
+  preemption:
+    reclaimWithinCohort: Any
+    withinClusterQueue: LowerPriority
+  resourceGroups:
+    - coveredResources: [cpu, memory, nvidia.com/gpu]
+      flavors:
+        - name: gpu-sim
+          resources:
+            - {name: cpu, nominalQuota: 4}
+            - {name: memory, nominalQuota: 8Gi}
+            - {name: nvidia.com/gpu, nominalQuota: 4, borrowingLimit: 4}
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ClusterQueue
+metadata: {name: team-b}
+spec:
+  cohortName: ai-factory
+  namespaceSelector: {}
+  preemption:
+    reclaimWithinCohort: Any
+    withinClusterQueue: LowerPriority
+  resourceGroups:
+    - coveredResources: [cpu, memory, nvidia.com/gpu]
+      flavors:
+        - name: gpu-sim
+          resources:
+            - {name: cpu, nominalQuota: 2}
+            - {name: memory, nominalQuota: 4Gi}
+            - {name: nvidia.com/gpu, nominalQuota: 2, borrowingLimit: 6}
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ClusterQueue
+metadata: {name: team-c}
+spec:
+  cohortName: ai-factory
+  namespaceSelector: {}
+  preemption:
+    reclaimWithinCohort: Any
+    withinClusterQueue: LowerPriority
+  resourceGroups:
+    - coveredResources: [cpu, memory, nvidia.com/gpu]
+      flavors:
+        - name: gpu-sim
+          resources:
+            - {name: cpu, nominalQuota: 2}
+            - {name: memory, nominalQuota: 4Gi}
+            - {name: nvidia.com/gpu, nominalQuota: 2, borrowingLimit: 0}
