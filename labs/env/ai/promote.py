@@ -1,4 +1,4 @@
-"""Lab D07: promotion gate for registered models. Runs the evaluation gate, records the result on the model version,
+"""Lab D07: promotion gate for registered models. Runs the evaluation gate on that exact version, records the result,
 and moves the `champion` alias only if the gate passes. `--rollback` points `champion` back to the previous version.
 
   python ai/promote.py --name d04-lora-adapter --version 2
@@ -10,7 +10,8 @@ from mlflow.tracking import MlflowClient
 HERE = pathlib.Path(__file__).parent
 ap = argparse.ArgumentParser()
 ap.add_argument("--name", required=True); ap.add_argument("--version"); ap.add_argument("--rollback", action="store_true")
-ap.add_argument("--gate", default=f"{sys.executable} {HERE / 'guard_eval.py'}", help="command whose exit code is the gate")
+ap.add_argument("--gate", default=f"{sys.executable} {HERE / 'eval_adapter.py'} --model-uri {{model_uri}}",
+                help="command whose exit code is the gate; {model_uri} is replaced by models:/<name>/<version>")
 a = ap.parse_args()
 c = MlflowClient(os.environ.get("MLFLOW_TRACKING_URI", "http://localhost:5000"))
 
@@ -30,7 +31,7 @@ if a.rollback:
 
 v = a.version or max(int(m.version) for m in c.search_model_versions(f"name='{a.name}'"))
 c.set_registered_model_alias(a.name, "candidate", v)
-r = subprocess.run(a.gate.split(), capture_output=True, text=True)
+r = subprocess.run(a.gate.format(model_uri=f"models:/{a.name}/{v}").split(), capture_output=True, text=True)
 score = r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr[-300:]
 c.set_model_version_tag(a.name, v, "gate_result", "pass" if r.returncode == 0 else "fail")
 c.set_model_version_tag(a.name, v, "gate_score", score[:500])
