@@ -152,7 +152,7 @@ services:
     command: ["python", "/opt/sim_exporter.py"]
     environment: {REDFISH_URL: "http://redfish:8000/redfish/v1"}
     volumes: [./telemetry/sim_exporter.py:/opt/sim_exporter.py:ro]
-    ports: ["9101:9101"]
+    ports: ["127.0.0.1:9101:9101"]      # /fault is unauthenticated: keep it off the network
 
   grafana:
     image: ${REGISTRY}/grafana/grafana:latest
