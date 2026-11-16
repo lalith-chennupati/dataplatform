@@ -25,7 +25,7 @@ cd labs/env && PY=~/.venvs/aif/bin/python
 $PY ops/backup_restore.py backup
 $PY ops/backup_restore.py list
 ```
-Expected: `backup <timestamp>: 12 index docs, mlflow ... B, catalog ... B, 7 checkpoints in ~1s` and `s3://vault/<timestamp>/manifest.json` holding a sha256 per item. The index backup includes the stored vectors, so restore does not need the embedding model. MLflow and the Iceberg REST catalog are stopped for a few seconds while their SQLite files are copied, so the copy is consistent; production uses the database's own online backup (`pg_dump`, PITR) instead.
+Expected: `backup <timestamp>: 12 index docs, mlflow ... B, catalog ... B, 7 checkpoints in ~17s` (most of it is stopping and starting MLflow and the catalog) and `s3://vault/<timestamp>/manifest.json` holding a sha256 per item. The index backup includes the stored vectors, so restore does not need the embedding model. MLflow and the Iceberg REST catalog are stopped for a few seconds while their SQLite files are copied, so the copy is consistent; production uses the database's own online backup (`pg_dump`, PITR) instead.
 
 ### Step 3 - [SIM] Disaster: delete the D03 index and break the registry
 ```bash
@@ -40,7 +40,7 @@ time $PY ops/backup_restore.py restore $TS --only es,mlflow
 $PY search/rag_search.py search "hotel spend" --groups finance,all-staff    # fin-001 Travel expense policy first
 curl -s "localhost:5000/api/2.0/mlflow/registered-models/get?name=d04-lora-adapter" | head -c 300
 ```
-Expected: `es: restored 12 docs`, `mlflow: restored /mlflow/mlflow.db with mlflow stopped`, total about 10 s, and the same top hit as before the deletion. Restore verifies each item's checksum first and refuses a tampered backup (try editing one object in `s3://vault` and rerun).
+Expected: `es: restored 12 docs`, `mlflow: restored /mlflow/mlflow.db with mlflow stopped`, total about 16 s, and the same top hit as before the deletion. Restore verifies each item's checksum first and refuses a tampered backup (try editing one object in `s3://vault` and rerun).
 
 Rerun D03 Step 5 (restricted documents) after the restore: ACL fields must come back exactly, or the restore has created a data leak.
 
