@@ -7,7 +7,7 @@ errors, gpus = [], d["gpu_nodes"] * d["gpus_per_node"]
 down = math.ceil(gpus / leaf["count"])                        # GPU-facing ports on the busiest leaf
 up_ports = leaf["ports"] - down
 up = min(up_ports, spine["count"] * (up_ports // spine["count"]))  # uplinks spread evenly over spines
-over = (down * d["nic_gbps_per_gpu"]) / max(up * spine["port_gbps"], 1)
+over = (down * min(d["nic_gbps_per_gpu"], leaf["port_gbps"])) / max(up * spine["port_gbps"], 1)
 spine_ports = leaf["count"] * up // spine["count"]
 print(f"{d['name']}: {gpus} GPUs, {leaf['count']} leaves, {spine['count']} spines")
 print(f"  per leaf: {down} down x {d['nic_gbps_per_gpu']}G, {up} up x {spine['port_gbps']}G -> oversubscription {over:.2f}:1")
@@ -16,6 +16,8 @@ if d["rail_optimised"] and leaf["count"] % d["gpus_per_node"]:
     errors.append(f"rail-optimised needs leaf count to be a multiple of gpus_per_node ({d['gpus_per_node']})")
 if down > leaf["ports"]:
     errors.append(f"leaf needs {down} GPU ports but has {leaf['ports']}")
+if leaf["port_gbps"] < d["nic_gbps_per_gpu"]:
+    errors.append(f"leaf ports ({leaf['port_gbps']}G) are slower than the GPU NICs ({d['nic_gbps_per_gpu']}G)")
 if spine_ports > spine["ports"]:
     errors.append(f"each spine needs {spine_ports} ports but has {spine['ports']}")
 if over > p["max_oversubscription"]:
