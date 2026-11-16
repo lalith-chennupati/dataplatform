@@ -68,8 +68,11 @@ sec = keys(S)
 lost = sorted(k for k in written if k not in sec)
 rpo = t_fail - min(written[k] for k in lost) if lost else 0.0
 app_bucket = S  # step 3: in production a DNS / config change (GitOps commit) points the app at the DR endpoint
-newest = max(sec) if sec else None
-body = s3.get_object(Bucket=app_bucket, Key=newest)["Body"].read() if newest else b""
+if not sec:
+    raise SystemExit(f"FAILOVER FAILED: no object reached {S} before the failure (interval {a.interval:.0f}s >= run {a.run:.0f}s); "
+                     f"all {len(written)} orders lost, RTO not achieved")
+newest = max(sec)
+body = s3.get_object(Bucket=app_bucket, Key=newest)["Body"].read()
 rto = time.time() - t_fail
 print(f"failover: app now reads {app_bucket}; newest replicated object {newest} = {body.decode()}")
 print(f"RPO {rpo:.1f}s ({len(lost)} of {len(written)} orders not replicated)   RTO {rto:.1f}s (automation only, excludes decision time)")
