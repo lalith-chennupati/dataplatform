@@ -31,13 +31,14 @@ model = get_peft_model(AutoModelForCausalLM.from_pretrained(a.model),
 model.print_trainable_parameters()
 opt = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=2e-4)
 rows = [json.loads(l) for l in open(HERE / "finetune.jsonl")]
-start = 0
+start, last_loss = 0, None
 
 if a.resume:
     keys = sorted(o["Key"] for o in s3.list_objects_v2(Bucket=BUCKET, Prefix=f"{a.run}/").get("Contents", []) if o["Key"].endswith(".pt"))
     if keys:
         ck = torch.load(io.BytesIO(s3.get_object(Bucket=BUCKET, Key=keys[-1])["Body"].read()), weights_only=False)
         set_peft_model_state_dict(model, ck["adapter"]); opt.load_state_dict(ck["opt"]); start = ck["step"]
+        last_loss = ck.get("loss")
         random.setstate(ck["rng"]); torch.set_rng_state(ck["torch_rng"])
         print(f"resumed from s3://{BUCKET}/{keys[-1]} at step {start}")
 
@@ -47,11 +48,12 @@ for step in range(start + 1, a.steps + 1):
     batch = tok(f"Question: {r['prompt']}\nAnswer: {r['completion']}{tok.eos_token}", return_tensors="pt")
     loss = model(**batch, labels=batch["input_ids"]).loss
     opt.zero_grad(); loss.backward(); opt.step()
+    last_loss = loss.item()
     if step % 5 == 0:
         print(f"step {step} loss {loss.item():.3f}", flush=True)
     if step % a.ckpt_every == 0:
         buf = io.BytesIO()
-        torch.save({"step": step, "adapter": get_peft_model_state_dict(model), "opt": opt.state_dict(),
+        torch.save({"step": step, "loss": last_loss, "adapter": get_peft_model_state_dict(model), "opt": opt.state_dict(),
                     "rng": random.getstate(), "torch_rng": torch.get_rng_state()}, buf)
         s3.put_object(Bucket=BUCKET, Key=f"{a.run}/step-{step:06d}.pt", Body=buf.getvalue())
         print(f"checkpoint s3://{BUCKET}/{a.run}/step-{step:06d}.pt ({buf.tell() / 1e6:.1f} MB)", flush=True)
@@ -69,7 +71,8 @@ if a.register:
     mlflow.set_experiment("d04-lora")
     with mlflow.start_run(run_name=a.run) as run:
         mlflow.log_params({"base_model": a.model, "r": 8, "steps": a.steps, "dataset": "ai/finetune.jsonl"})
-        mlflow.log_metric("final_loss", loss.item())
+        if last_loss is not None:
+            mlflow.log_metric("final_loss", last_loss)
         mlflow.log_artifacts(str(out), artifact_path="adapter")
         mv = mlflow.register_model(f"runs:/{run.info.run_id}/adapter", "d04-lora-adapter")
         print(f"registered d04-lora-adapter version {mv.version}")
