@@ -4,7 +4,7 @@ and moves the `champion` alias only if the gate passes. `--rollback` points `cha
   python ai/promote.py --name d04-lora-adapter --version 2
   python ai/promote.py --name d04-lora-adapter --rollback
 """
-import argparse, json, os, pathlib, subprocess, sys
+import argparse, json, os, pathlib, shlex, subprocess, sys
 from mlflow.tracking import MlflowClient
 
 HERE = pathlib.Path(__file__).parent
@@ -31,7 +31,7 @@ if a.rollback:
 
 v = a.version or max(int(m.version) for m in c.search_model_versions(f"name='{a.name}'"))
 c.set_registered_model_alias(a.name, "candidate", v)
-r = subprocess.run(a.gate.format(model_uri=f"models:/{a.name}/{v}").split(), capture_output=True, text=True)
+r = subprocess.run(shlex.split(a.gate.replace("{model_uri}", f"models:/{a.name}/{v}")), capture_output=True, text=True)
 score = r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr[-300:]
 c.set_model_version_tag(a.name, v, "gate_result", "pass" if r.returncode == 0 else "fail")
 c.set_model_version_tag(a.name, v, "gate_score", score[:500])
