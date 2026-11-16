@@ -210,7 +210,12 @@ def deploy(args):
     rel["snapshots_after"] = snapshots(cur, env)
     rel["rows"] = {t: q(cur, f"SELECT count(*) FROM {t}")[0][0] for t in rel["snapshots_after"]}
     rel["status"] = "passed"
-    record(rel)
+    try:
+        record(rel)
+    except Exception as e:  # outputs without a release record would break promotion and rollback history
+        print(f"could not write the release record ({e}): restoring {env} outputs", file=sys.stderr)
+        restore(cur, rel["snapshots_before"])
+        sys.exit(1)
 
 
 def snapshots_of(cur, table):
