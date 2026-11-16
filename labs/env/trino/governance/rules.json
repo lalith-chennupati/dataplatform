@@ -1,0 +1,28 @@
+{
+  "catalogs": [
+    {"user": "trino|admin", "catalog": ".*", "allow": "all"},
+    {"user": "fin|ana", "catalog": "(postgresql|iceberg|system)", "allow": "read-only"},
+    {"catalog": ".*", "allow": "none"}
+  ],
+  "schemas": [
+    {"user": "trino|admin", "owner": true},
+    {"user": "fin|ana", "schema": "(crm|curated|consumption|information_schema|runtime)", "owner": false}
+  ],
+  "tables": [
+    {"user": "trino|admin", "privileges": ["SELECT", "INSERT", "DELETE", "UPDATE", "OWNERSHIP", "GRANT_SELECT"]},
+    {"user": "fin", "catalog": "postgresql", "schema": "crm", "table": "customers", "privileges": ["SELECT"]},
+    {"user": "ana", "catalog": "postgresql", "schema": "crm", "table": "customers", "privileges": ["SELECT"],
+     "filter": "region = 'EMEA'",
+     "columns": [
+       {"name": "email", "mask": "'***masked***'"},
+       {"name": "name", "mask": "substr(name, 1, 1) || '***'"}
+     ]},
+    {"user": "fin|ana", "catalog": "iceberg", "schema": "(curated|consumption)", "privileges": ["SELECT"]},
+    {"catalog": "system", "schema": "runtime", "table": "queries", "privileges": ["SELECT"]},
+    {"schema": "information_schema", "privileges": ["SELECT"]}
+  ],
+  "queries": [
+    {"user": "trino|admin", "allow": ["execute", "kill", "view"]},
+    {"allow": ["execute"]}
+  ]
+}

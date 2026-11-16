@@ -1,0 +1,7 @@
+# Overlay for lab B03: turns on Trino file-based access control (RBAC, row filters, column masks).
+#   docker compose -f docker-compose.yml -f docker-compose.governance.yml --profile core up -d trino
+services:
+  trino:
+    volumes:
+      - ./trino/governance/access-control.properties:/etc/trino/access-control.properties:ro
+      - ./trino/governance/rules.json:/etc/trino/rules.json:ro

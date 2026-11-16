@@ -54,6 +54,7 @@ make up-all                             # everything (~10 GB RAM)
 For Track D, pull the CPU models once:
 ```bash
 docker compose exec ollama ollama pull qwen2.5:0.5b        # small chat model
+docker compose exec ollama ollama pull qwen2.5:1.5b        # used by Trino AI functions (B05)
 docker compose exec ollama ollama pull nomic-embed-text    # 768-dim embeddings
 ```
 
@@ -101,7 +102,7 @@ Expected: one control-plane and two workers labelled `pool=cpu` and `pool=gpu-si
 ### Step 7 - Install the automation tooling
 ```bash
 python3 -m venv ~/.venvs/aif && . ~/.venvs/aif/bin/activate
-pip install ansible-core boto3 requests elasticsearch==8.15.1 mlflow==2.22.0 scikit-learn
+pip install ansible-core boto3 requests elasticsearch==8.15.1 mlflow==2.22.0 scikit-learn trino
 ansible-galaxy collection install dellemc.powerscale dellemc.openmanage
 # Terraform 1.6+ from https://developer.hashicorp.com/terraform/install for A05
 ```
