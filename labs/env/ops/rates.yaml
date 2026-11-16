@@ -1,0 +1,7 @@
+# Lab E05: example internal rate card (placeholders: derive real rates from TCO / FIN-01 funding model)
+currency: USD
+rates:
+  gpu_hour: 2.40          # per allocated GPU-hour (scheduler-reported, not utilisation)
+  storage_tb_month: 18.0  # per TB-month used (S3 / SmartQuotas)
+  mtok: 0.35              # per million LLM tokens served through the gateway
+required_labels: [cost-center, owner, project]

@@ -1,0 +1,8 @@
+team,namespace,workload,gpus,hours,cost-center,owner,project
+team-a,team-a,llm-pretrain-7b,8,62.5,CC-1001,ana,foundation-models
+team-a,team-a,eval-sweep,2,14.0,CC-1001,ana,foundation-models
+team-b,team-b,fraud-finetune,4,20.0,CC-2040,raj,fraud-ai
+team-b,team-b,notebook-gpu,1,96.0,,raj,
+team-c,team-c,rag-embed-batch,1,6.5,CC-3300,mei,finance-assistant
+team-c,team-c,prod-inference,2,168.0,CC-3300,mei,finance-assistant
+research,research,adhoc-test,1,11.0,,,
