@@ -1,0 +1,28 @@
+%% Raw → curated → consumption flow for the Sales domain in prod (LAK-05). Lab B08 runs this flow in dev, QA and prod.
+flowchart LR
+  erp["ERP order<br/>management"] -- "CDC every 15 min" --> raw
+  subgraph OS["ObjectScale bucket aidp-prod, prefix sales/"]
+    direction LR
+    raw[("raw<br/>iceberg.prod_sales_raw<br/>.orders_events<br/>append only")]
+    cur[("curated<br/>iceberg.prod_sales_curated<br/>.orders")]
+    q[("curated<br/>.orders_quarantine")]
+    gold1[("consumption<br/>.daily_revenue")]
+    gold2[("consumption<br/>.customer_ltv")]
+  end
+  raw -- "Spark: dedupe by order_id,<br/>validate, MERGE" --> cur
+  raw -- "invalid rows" --> q
+  cur -- "Spark: aggregate" --> gold1 & gold2
+  dq{"DQ gate<br/>no duplicates, amount > 0,<br/>gold = silver, quarantine <= 1%"}
+  cur & gold1 & q -.-> dq
+  dq -- "fail: restore snapshots" --> cur
+  dq -- "pass: release record" --> rel["s3://aidp-releases/prod/"]
+  gold1 --> trino["Data Analytics Engine<br/>Trino"]
+  gold2 --> trino
+  cur --> trino
+  trino --> bi["Executive BI"]
+  trino --> fin["Finance domain<br/>revenue_by_region_month"]
+  trino --> cust["Customer domain<br/>customer_360, churn features"]
+  classDef zone fill:#e8f1fb,stroke:#0672cb
+  classDef bad fill:#fde7e9,stroke:#c62828
+  class raw,cur,gold1,gold2 zone
+  class q bad

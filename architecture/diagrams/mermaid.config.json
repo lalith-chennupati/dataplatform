@@ -1,0 +1,12 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, Helvetica, sans-serif",
+    "primaryColor": "#e8f1fb",
+    "primaryBorderColor": "#0672cb",
+    "lineColor": "#4d4d4d",
+    "clusterBkg": "#fafafa",
+    "clusterBorder": "#9e9e9e"
+  },
+  "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 50}
+}

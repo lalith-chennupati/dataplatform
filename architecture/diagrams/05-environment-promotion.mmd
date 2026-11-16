@@ -1,0 +1,26 @@
+%% Same Git commit promoted dev → QA → prod with gates (PLT-09, ING-06, OPS-05). Implemented in lab B08.
+flowchart LR
+  dev_pr["Pull request<br/>SQL, Spark, migrations"] --> ci["CI: lint, unit tests,<br/>SQL compile"]
+  ci --> dev
+  subgraph DEV["dev"]
+    dev["deploy as svc-dev<br/>bucket aidp-dev<br/>schemas dev_*<br/>5% sample + bad rows"]
+    dev --> g1{"DQ gate"}
+  end
+  g1 -- pass --> qa
+  subgraph QA["qa"]
+    qa["deploy same commit as svc-qa<br/>bucket aidp-qa<br/>schemas qa_*<br/>full volume, masked"]
+    qa --> g2{"DQ gate +<br/>contract tests"}
+  end
+  g2 -- pass --> appr{"Change approval<br/>approver ≠ author"}
+  appr -- approved --> prod
+  subgraph PROD["prod"]
+    prod["deploy same commit as svc-prod<br/>bucket aidp-prod<br/>schemas prod_*"]
+    prod --> g3{"DQ gate"}
+  end
+  g1 & g2 & g3 -- fail --> rb["Restore previous<br/>Iceberg snapshots"]
+  g3 -- pass --> rec["Release record<br/>s3://aidp-releases/prod/<br/>SHA, approver, snapshots, DQ"]
+  rec -.-> rollback["pipeline.py rollback<br/>to previous release"]
+  classDef gate fill:#fff4d6,stroke:#b07d00
+  classDef fail fill:#fde7e9,stroke:#c62828
+  class g1,g2,g3,appr gate
+  class rb fail

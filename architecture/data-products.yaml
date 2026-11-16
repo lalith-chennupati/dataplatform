@@ -1,0 +1,314 @@
+# Sample data domains and data products for an enterprise on Dell AI Data Platform (AIDP) and Dell AI Factory.
+# Source of truth for architecture/data-product-catalog.md and diagrams/02-domain-product-map.mmd.
+# Edit this file, then run: python3 tools/build_architecture.py --render
+#
+# The company ("Acme") and every name below are samples. Replace them with your own domains during the
+# questionnaire workshops (DAT-02 owners and stewards, DAT-11 data contracts, LAK-05 layer model).
+
+conventions:
+  product_id: "<domain>.<product>"                       # unique, never reused
+  table: "iceberg.<env>_<domain>_<layer>.<product>"      # one Iceberg schema per env + domain + layer
+  object_path: "s3://aidp-<env>/<domain>/<layer>/<product>/"   # ObjectScale bucket per env, prefix per domain
+  file_path: "/ifs/aidp/<env>/<domain>/<product>/"       # PowerScale path for unstructured sources
+  search_index: "<env>-<domain>-<product>"               # Data Search Engine index
+  model: "<domain>.<product>@<alias>"                    # MLflow registered model, aliases champion / challenger
+  layers: [raw, curated, consumption]                    # bronze / silver / gold (LAK-05)
+  classification: [Public, Internal, Confidential, Restricted]   # DAT-01
+  environments: [dev, qa, prod]                          # PLT-09, promotion as in lab B08
+
+# Operational systems that feed the platform (DAT-03). Ingest pattern per ING-01.
+sources:
+  - {id: src.erp_orders, name: ERP order management, ingest: CDC every 15 min}
+  - {id: src.erp_gl, name: ERP general ledger, ingest: nightly batch}
+  - {id: src.crm, name: CRM customer master, ingest: CDC every 15 min}
+  - {id: src.wms, name: Warehouse management system, ingest: hourly batch}
+  - {id: src.telematics, name: Fleet and shipment telematics, ingest: Kafka stream}
+  - {id: src.service_desk, name: Customer service case system, ingest: CDC every 15 min}
+  - {id: src.documents, name: Product manuals and support KB (file shares), ingest: file drop to PowerScale}
+
+# Applications and teams outside the platform. Product-to-product use is derived from each product's inputs.
+# A consumer that needs a new field asks the owning domain; it does not copy the data.
+consumers:
+  - {id: bi.exec, name: Executive BI dashboards}
+  - {id: app.finance, name: Finance analysts (persona fin)}
+  - {id: app.analysts, name: Business analysts (persona ana)}
+  - {id: app.planning, name: Demand planning app}
+  - {id: app.retention, name: Retention campaign tool}
+  - {id: app.support, name: Support agent desktop}
+
+domains:
+  - id: sales
+    name: Sales & Orders
+    owner: VP Sales Operations
+    steward: Sales data steward
+    team: sales-data
+    description: Orders from capture to fulfilment status. Owns revenue facts.
+  - id: customer
+    name: Customer
+    owner: Head of Customer Experience
+    steward: Customer data steward (privacy)
+    team: customer-data
+    description: Customer identity, profile and behaviour. Owns all customer PII.
+  - id: finance
+    name: Finance & Treasury
+    owner: CFO office (Financial Controller)
+    steward: Finance data steward
+    team: finance-data
+    description: Ledger, margin and reporting views. Treasury is the X01 capstone tenant.
+  - id: supply
+    name: Supply Chain
+    owner: VP Supply Chain
+    steward: Supply chain data steward
+    team: supply-data
+    description: Inventory, shipments and the demand forecast.
+  - id: service
+    name: Customer Service
+    owner: Head of Customer Service
+    steward: Service knowledge manager
+    team: service-data
+    description: Cases, knowledge articles and the support assistant.
+
+# type: source-aligned | aggregate | consumer-aligned | feature-set | vector-index | model | ai-app
+products:
+  # ---------- Sales ----------
+  - id: sales.orders
+    domain: sales
+    type: source-aligned
+    description: One row per order, deduplicated by order_id, invalid rows quarantined.
+    classification: Internal
+    layer: curated
+    engine: Data Processing Engine (Spark)
+    serve: Data Analytics Engine (Trino)
+    inputs: [src.erp_orders]
+    freshness: 30 min
+    quality: [no duplicate order_id, amount > 0, quarantine <= 1%]
+    consumers: []
+    labs: [B02, B04, B08]
+    questions: [LAK-05, DAT-08, ING-07]
+  - id: sales.daily_revenue
+    domain: sales
+    type: aggregate
+    description: Revenue and order count by order_date and status.
+    classification: Internal
+    layer: consumption
+    engine: Data Processing Engine (Spark)
+    serve: Data Analytics Engine (Trino)
+    inputs: [sales.orders]
+    freshness: 1 h
+    quality: [reconciles to sales.orders within 1.00]
+    consumers: [bi.exec]
+    labs: [B08]
+    questions: [DAT-08, DAT-11]
+  - id: sales.customer_ltv
+    domain: sales
+    type: consumer-aligned
+    description: Lifetime value, first and last order per customer.
+    classification: Confidential
+    layer: consumption
+    engine: Data Processing Engine (Spark)
+    serve: Data Analytics Engine (Trino)
+    inputs: [sales.orders]
+    freshness: daily 06:00
+    quality: [one row per customer_id]
+    consumers: [app.retention]
+    labs: [B08]
+    questions: [DAT-11, ING-07]
+
+  # ---------- Customer ----------
+  - id: customer.customer_master
+    domain: customer
+    type: source-aligned
+    description: Golden customer record. Email and name masked for every role except customer-data.
+    classification: Restricted
+    layer: curated
+    engine: Data Analytics Engine (Trino federation, then CTAS)
+    serve: Data Analytics Engine (Trino) with column masks
+    inputs: [src.crm]
+    freshness: 30 min
+    quality: [unique customer_id, valid email format, region not null]
+    consumers: []
+    labs: [B01, B03]
+    questions: [DAT-01, LAK-09, ING-08]
+  - id: customer.customer_360
+    domain: customer
+    type: aggregate
+    description: Customer profile joined with order and case history. No raw PII columns.
+    classification: Confidential
+    layer: consumption
+    engine: Data Processing Engine (Spark)
+    serve: Data Analytics Engine (Trino)
+    inputs: [customer.customer_master, sales.orders, service.cases]
+    freshness: daily 05:00
+    quality: [every customer_master row present, no email or name columns]
+    consumers: [app.analysts]
+    labs: [B03, B04]
+    questions: [DAT-07, LAK-09]
+  - id: customer.churn_features
+    domain: customer
+    type: feature-set
+    description: Point-in-time features for churn training and scoring.
+    classification: Confidential
+    layer: consumption
+    engine: Data Processing Engine (Spark)
+    serve: Iceberg snapshot pinned per training run
+    inputs: [customer.customer_360, sales.customer_ltv]
+    freshness: daily 06:30
+    quality: [no future-dated feature values, null rate per feature <= 2%]
+    consumers: []
+    labs: [B04, D07]
+    questions: [LAK-10, DAT-07]
+  - id: customer.churn_model
+    domain: customer
+    type: model
+    description: Churn probability per customer; champion and challenger in the model registry.
+    classification: Confidential
+    engine: GPU training on PowerEdge, MLflow registry
+    serve: Batch scoring to iceberg.prod_customer_consumption.churn_scores
+    inputs: [customer.churn_features]
+    freshness: weekly retrain, daily score
+    quality: [AUC >= champion - 0.01, fairness gap <= 5 pts across regions]
+    consumers: [app.retention]
+    labs: [D07]
+    questions: [MLO-03, MLO-04, MLO-07, GOV-09]
+
+  # ---------- Finance ----------
+  - id: finance.gl_journal
+    domain: finance
+    type: source-aligned
+    description: General ledger journal lines, immutable once the period closes.
+    classification: Confidential
+    layer: curated
+    engine: Data Processing Engine (Spark)
+    serve: Data Analytics Engine (Trino)
+    inputs: [src.erp_gl]
+    freshness: nightly
+    quality: [debits equal credits per journal, closed periods unchanged]
+    consumers: []
+    labs: [A03, B02]
+    questions: [STO-09, DAT-09]
+  - id: finance.revenue_by_region_month
+    domain: finance
+    type: consumer-aligned
+    description: Monthly revenue by customer region for management reporting.
+    classification: Internal
+    layer: consumption
+    engine: Data Analytics Engine (Trino CTAS)
+    serve: Data Analytics Engine (Trino)
+    inputs: [sales.orders, customer.customer_master]
+    freshness: daily 07:00
+    quality: [total equals sales.daily_revenue for the month]
+    consumers: [bi.exec, app.finance]
+    labs: [B01, B02]
+    questions: [LAK-04, LAK-08]
+  - id: finance.margin_by_product
+    domain: finance
+    type: consumer-aligned
+    description: Gross margin by product line and month.
+    classification: Confidential
+    layer: consumption
+    engine: Data Processing Engine (Spark)
+    serve: Data Analytics Engine (Trino)
+    inputs: [finance.gl_journal, supply.inventory]
+    freshness: monthly close + 1 day
+    quality: [reconciles to gl_journal revenue and COGS accounts]
+    consumers: [app.finance]
+    labs: [B04]
+    questions: [DAT-08, DAT-11]
+  - id: finance.treasury_policy_assistant
+    domain: finance
+    type: ai-app
+    description: Guarded RAG assistant over treasury policies (capstone tenant "Treasury").
+    classification: Confidential
+    engine: NIM LLM + Data Search Engine, guardrails
+    serve: Internal chat endpoint behind the AI gateway
+    inputs: [src.documents]
+    freshness: policies re-indexed within 1 h of change
+    quality: [D05 guardrail suite passes, groundedness >= 0.8]
+    consumers: [app.finance]
+    labs: [X01, D03, D05]
+    questions: [RAG-03, MLO-09, GOV-03]
+
+  # ---------- Supply chain ----------
+  - id: supply.inventory
+    domain: supply
+    type: source-aligned
+    description: Hourly on-hand and allocated stock by SKU and warehouse.
+    classification: Internal
+    layer: curated
+    engine: Data Processing Engine (Spark)
+    serve: Data Analytics Engine (Trino)
+    inputs: [src.wms]
+    freshness: 1 h
+    quality: [on_hand >= 0, every active warehouse reported]
+    consumers: []
+    labs: [B02]
+    questions: [ING-04, DAT-08]
+  - id: supply.shipments
+    domain: supply
+    type: source-aligned
+    description: Shipment events from telematics, one row per status change.
+    classification: Internal
+    layer: curated
+    engine: Data Processing Engine (Spark Structured Streaming)
+    serve: Data Analytics Engine (Trino)
+    inputs: [src.telematics]
+    freshness: 5 min
+    quality: [event_time not in future, late events <= 0.5%]
+    consumers: [app.planning]
+    labs: [B04]
+    questions: [ING-01, ING-04]
+  - id: supply.demand_forecast
+    domain: supply
+    type: model
+    description: 13-week SKU demand forecast, published as a table.
+    classification: Internal
+    engine: GPU training on PowerEdge, MLflow registry
+    serve: iceberg.prod_supply_consumption.demand_forecast
+    inputs: [sales.orders, supply.inventory, supply.shipments]
+    freshness: weekly
+    quality: [MAPE <= 20% on last 8 weeks backtest]
+    consumers: [app.planning]
+    labs: [D07, C05]
+    questions: [MLO-07, MLO-12]
+
+  # ---------- Customer service ----------
+  - id: service.cases
+    domain: service
+    type: source-aligned
+    description: Support cases with category, priority and resolution time.
+    classification: Confidential
+    layer: curated
+    engine: Data Processing Engine (Spark)
+    serve: Data Analytics Engine (Trino)
+    inputs: [src.service_desk]
+    freshness: 30 min
+    quality: [unique case_id, closed cases have resolution time]
+    consumers: [app.analysts]
+    labs: [B05]
+    questions: [ING-08, DAT-08]
+  - id: service.knowledge_index
+    domain: service
+    type: vector-index
+    description: Chunked and embedded manuals and KB articles with per-document ACLs.
+    classification: Internal
+    engine: Data Processing Engine (parse/chunk) + GPU embeddings
+    serve: Data Search Engine (hybrid keyword + vector)
+    inputs: [src.documents]
+    freshness: 1 h after document change, deletes within 24 h
+    quality: [every chunk has source and acl, embedding model version recorded]
+    consumers: []
+    labs: [B06, B07, A08]
+    questions: [ING-05, RAG-04, RAG-07]
+  - id: service.support_assistant
+    domain: service
+    type: ai-app
+    description: RAG assistant that drafts answers with citations for support agents.
+    classification: Internal
+    engine: NIM LLM, AI gateway, guardrails
+    serve: Support agent desktop plug-in
+    inputs: [service.knowledge_index, service.cases]
+    freshness: real time
+    quality: [groundedness >= 0.8, no answer without citation, D05 suite passes]
+    consumers: [app.support]
+    labs: [D01, D03, D05, D06]
+    questions: [RAG-03, RAG-08, MLO-09, AGT-03]

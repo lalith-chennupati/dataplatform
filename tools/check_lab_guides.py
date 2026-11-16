@@ -1,4 +1,4 @@
-"""Check lab guides: every cited questionnaire ID exists and every relative Markdown link resolves.
+"""Check lab guides and architecture docs: every cited questionnaire ID exists and every relative Markdown link resolves.
 
   python3 tools/check_lab_guides.py
 """
@@ -11,7 +11,7 @@ ids = {f"{d['code']}-{i:02d}" for d in q["domains"] for i, _ in enumerate(d["que
 codes = {d["code"] for d in q["domains"]}
 
 errors = []
-for md in sorted((ROOT / "labs").rglob("*.md")):
+for md in sorted([*(ROOT / "labs").rglob("*.md"), *(ROOT / "architecture").rglob("*.md")]):
     text = md.read_text()
     for qid in set(re.findall(r"`([A-Z]{3}-\d{2})`", text)):
         if qid.split("-")[0] in codes and qid not in ids:
