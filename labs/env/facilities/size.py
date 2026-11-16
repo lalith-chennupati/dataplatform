@@ -4,7 +4,7 @@ import math, sys, yaml
 s = yaml.safe_load(open(sys.argv[1] if len(sys.argv) > 1 else "facilities/site.yaml"))
 site, gaps = s["site"], []
 nodes = math.ceil(s["target_gpus"] / s["gpus_per_node"])
-rack_kw = s["nodes_per_rack"] * s["node_max_kw"] + s["rack_extra_kw"]
+rack_kw = min(s["nodes_per_rack"], nodes) * s["node_max_kw"] + s["rack_extra_kw"]     # busiest compute rack
 compute_racks = math.ceil(nodes / s["nodes_per_rack"])
 it_max = compute_racks * s["rack_extra_kw"] + nodes * s["node_max_kw"] + s["storage_racks"] * s["storage_rack_kw"] + s["network_racks"] * s["network_rack_kw"]
 it_typ = it_max - nodes * s["node_max_kw"] * (1 - s["node_typical_pct"] / 100)
