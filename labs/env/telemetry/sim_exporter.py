@@ -18,7 +18,7 @@ state = {}
 
 def reset():
     state.clear()
-    state.update(temp={}, xid={}, quota=0.62, links={r: 1 for r in RAILS})
+    state.update(temp={}, xid={}, quota=0.62, links={r: 1 for r in RAILS}, pfc={r: 0 for r in RAILS})
 
 
 def redfish(path):
@@ -59,7 +59,9 @@ def metrics():
     add("storage_quota_used_ratio", {"path": "/ifs/ai/team-a"}, state["quota"])
     for r, up in state["links"].items():
         add("fabric_link_oper_up", {"switch": "leaf1", "port": r}, up)
-        add("fabric_pfc_pause_frames_total", {"switch": "leaf1", "port": r}, 0 if up else random.randint(1000, 5000))
+        if not up:
+            state["pfc"][r] += random.randint(1000, 5000)       # counter only grows, like a real switch counter
+        add("fabric_pfc_pause_frames_total", {"switch": "leaf1", "port": r}, state["pfc"][r])
     return "\n".join(out) + "\n"
 
 
