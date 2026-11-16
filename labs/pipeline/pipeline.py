@@ -5,8 +5,9 @@
   pipeline.py deploy   --env dev|qa|prod [--approved-by WHO]
   pipeline.py status
   pipeline.py rollback --env prod [--to SHA]
+  pipeline.py destroy  --env dev|qa|prod      (lab cleanup)
 """
-import argparse, datetime as dt, hashlib, json, pathlib, string, subprocess, sys
+import argparse, datetime as dt, hashlib, json, os, pathlib, string, subprocess, sys
 
 import boto3, trino, yaml
 
@@ -14,12 +15,15 @@ HERE = pathlib.Path(__file__).resolve().parent
 ENV_DIR = HERE.parent / "env"
 CFG = yaml.safe_load((HERE / "environments.yaml").read_text())
 DOTENV = dict(l.split("=", 1) for l in (ENV_DIR / ".env").read_text().splitlines() if "=" in l and not l.startswith("#"))
-TRINO = ("localhost", 8080)
-S3_URL = "http://localhost:8333"
+# Lab endpoints by default; CI runners in each environment override them.
+TRINO = (os.environ.get("AIDP_TRINO_HOST", "localhost"), int(os.environ.get("AIDP_TRINO_PORT", "8080")))
+S3_URL = os.environ.get("AIDP_S3_ENDPOINT", "http://localhost:8333")
 
 
 def secret_for(account):
-    # SIM: read the lab identity file. Real platform: fetch from the secrets manager (SEC-05), never from Git.
+    # CI injects AIDP_SVC_<ENV>_SECRET from the secrets manager (SEC-05). SIM falls back to the lab identity file.
+    if f"AIDP_{account.upper().replace('-', '_')}_SECRET" in os.environ:
+        return os.environ[f"AIDP_{account.upper().replace('-', '_')}_SECRET"]
     ids = json.loads((ENV_DIR / "seaweedfs" / "s3.json").read_text())["identities"]
     return next(c["secretKey"] for i in ids if i["name"] == account for c in i["credentials"])
 
@@ -237,6 +241,25 @@ def rollback(args):
     record({**target, "status": "rolled-back", "rolled_back_from": current["git_sha"], "approved_by": args.approved_by})
 
 
+def destroy(args):
+    env, cur = args.env, connect("admin")
+    for schema in (f"{env}_raw", f"{env}_curated", f"{env}_consumption", f"{env}_meta"):
+        if not q(cur, f"SELECT 1 FROM information_schema.schemata WHERE schema_name = '{schema}'"):
+            continue
+        for (t,) in q(cur, f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{schema}'"):
+            q(cur, f"DROP TABLE {schema}.{t}")
+        q(cur, f"DROP SCHEMA {schema}")
+    c = s3()
+    for b, prefix in ((CFG["environments"][env]["bucket"], ""), (CFG["releases_bucket"], f"{env}/")):
+        try:
+            for page in c.get_paginator("list_objects_v2").paginate(Bucket=b, Prefix=prefix):
+                for o in page.get("Contents", []):
+                    c.delete_object(Bucket=b, Key=o["Key"])
+        except c.exceptions.NoSuchBucket:
+            pass
+    print(f"{env}: tables, data and release records removed")
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -248,6 +271,8 @@ def main():
     sub.add_parser("status").set_defaults(fn=status)
     s = sub.add_parser("rollback"); s.add_argument("--env", choices=envs, required=True); s.add_argument("--to"); s.add_argument("--approved-by")
     s.set_defaults(fn=rollback)
+    s = sub.add_parser("destroy"); s.add_argument("--env", choices=envs, required=True)
+    s.set_defaults(fn=destroy)
     a = p.parse_args()
     a.fn(a)
 
