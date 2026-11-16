@@ -17,7 +17,7 @@
 | DMTF Redfish Mockup Server | iDRAC Redfish API | `http://localhost:8000` | infra |
 | Ollama (CPU) | NIM / LLM + embedding endpoint (OpenAI-compatible) | `http://localhost:11434` | ai |
 | MLflow 2.22 | Model registry / tracking | `http://localhost:5000` | ai |
-| Prometheus + Grafana | Observability / AIOps | `:9090`, `:3000` | obs |
+| Prometheus + Grafana + `telemetry` (simulated iDRAC/DCGM/storage/switch exporter) | Observability / AIOps | `:9090`, `:3000`, `:9101` | obs |
 | kind (3 nodes) | Kubernetes / OpenShift | `kubectl --context kind-aifactory-lab` | n/a |
 | PowerScale OneFS Simulator *(optional)* | PowerScale | `$PS` | n/a (VM) |
 

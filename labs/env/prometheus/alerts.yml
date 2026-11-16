@@ -1,0 +1,26 @@
+# Lab C08 alert rules. Each alert names its runbook; write the runbook as part of the lab.
+groups:
+  - name: ai-factory-infra
+    rules:
+      - alert: GPUThermalThrottle
+        expr: DCGM_FI_DEV_GPU_TEMP > 90 and DCGM_FI_DEV_SM_CLOCK < 1500
+        for: 10s
+        labels: {severity: warning, team: platform}
+        annotations: {summary: "GPU {{ $labels.gpu }} on {{ $labels.node }} is throttling", runbook: "runbooks/gpu-thermal.md"}
+      - alert: GPUXidError
+        expr: DCGM_FI_DEV_XID_ERRORS > 0
+        labels: {severity: critical, team: platform}
+        annotations: {summary: "XID {{ $value }} on GPU {{ $labels.gpu }} ({{ $labels.node }}): drain node", runbook: "runbooks/gpu-xid.md"}
+      - alert: StorageQuotaNearlyFull
+        expr: storage_quota_used_ratio > 0.9
+        labels: {severity: warning, team: storage}
+        annotations: {summary: "{{ $labels.path }} quota {{ $value | humanizePercentage }} used", runbook: "runbooks/quota.md"}
+      - alert: FabricLinkDown
+        expr: fabric_link_oper_up == 0
+        labels: {severity: critical, team: network}
+        annotations: {summary: "{{ $labels.switch }} {{ $labels.port }} down", runbook: "runbooks/link-down.md"}
+      - alert: BMCUnreachable
+        expr: redfish_up == 0
+        for: 30s
+        labels: {severity: warning, team: platform}
+        annotations: {summary: "Redfish/iDRAC of {{ $labels.node }} unreachable", runbook: "runbooks/bmc.md"}

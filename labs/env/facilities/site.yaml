@@ -1,0 +1,18 @@
+# Lab C07: site-readiness sizing input. Replace every power figure with the value from the Dell spec sheet / Enterprise
+# Infrastructure Planning Tool (EIPT) for your exact configuration - the defaults here are placeholders, not Dell data.
+target_gpus: 256
+gpus_per_node: 8
+node_max_kw: 11.5               # placeholder - take max input power for your server config from Dell EIPT
+node_typical_pct: 75            # typical draw as % of max during training
+nodes_per_rack: 4
+rack_extra_kw: 3.0              # ToR/back-end switches, PDUs, management per rack
+storage_racks: 2
+storage_rack_kw: 12.0
+network_racks: 2                # spine / core
+network_rack_kw: 10.0
+site:
+  max_kw_per_rack: 40           # what the room can deliver per rack today (FAC-01)
+  cooling: air                  # air | rear-door | dlc  (FAC-02)
+  air_cooling_limit_kw_per_rack: 30
+  pue: 1.4
+  available_it_kw: 1500         # FAC-03

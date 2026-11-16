@@ -1,0 +1,26 @@
+# Lab C06: back-end (GPU-to-GPU) fabric design as code. Change the numbers to your design and run check_fabric.py.
+name: aif-backend-pod1
+gpu_nodes: 32
+gpus_per_node: 8
+nic_gbps_per_gpu: 400            # one back-end NIC per GPU (rail-optimised)
+rail_optimised: true             # NIC n of every node goes to leaf/rail n
+leaf:
+  count: 8                       # one leaf per rail for 32 nodes
+  ports: 64
+  port_gbps: 400
+spine:
+  count: 4
+  ports: 64
+  port_gbps: 400
+qos:                             # RoCEv2 lossless settings; check_fabric.py checks them against policy below
+  mtu: 9100
+  pfc_priorities: [3]
+  ecn: {enabled: true, min_kb: 150, max_kb: 1500, probability_pct: 5}
+  dcqcn: true
+  roce_dscp: 26
+  cnp_dscp: 48
+policy:
+  max_oversubscription: 1.0      # 1:1 non-blocking for training
+  require_pfc_priority: 3
+  require_mtu_min: 9000
+  nccl_busbw_target_pct_of_line_rate: 85
