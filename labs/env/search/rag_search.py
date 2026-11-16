@@ -33,6 +33,8 @@ def ingest(_):
         for i, c in enumerate(chunks(d["text"])):
             docs.append((f"{d['id']}#{i}", {"doc_id": d["id"], "title": d["title"], "path": d["path"], "acl": d["acl"],
                                             "text": c, "vector": embed(f"{d['title']}. {c}")}))
+    if not docs:
+        raise SystemExit("corpus.jsonl is empty; index left unchanged")
     # embed everything first so a failed embedding run leaves the existing index intact
     ES.indices.delete(index=INDEX, ignore_unavailable=True)
     ES.indices.create(index=INDEX, mappings={"properties": {
