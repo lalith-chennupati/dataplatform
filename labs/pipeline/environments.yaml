@@ -1,0 +1,24 @@
+# Promotion path and per-environment settings for the orders pipeline (lab B08).
+# Everything that differs between dev, QA and prod lives here; SQL and code are identical in all three.
+order: [dev, qa, prod]
+environments:
+  dev:
+    bucket: aidp-dev            # ObjectScale bucket / PowerScale path per environment
+    service_account: svc-dev    # Trino user and S3 identity the pipeline runs as
+    source: sample              # 5% sample of operational data plus injected bad rows
+    dq: {max_quarantine_pct: 5.0, min_rows: 100}
+    allow_dirty: true           # developers may deploy uncommitted work to dev only
+  qa:
+    bucket: aidp-qa
+    service_account: svc-qa
+    source: masked              # full volume, customer_id pseudonymised
+    dq: {max_quarantine_pct: 1.0, min_rows: 10000}
+    requires_passed_in: dev
+  prod:
+    bucket: aidp-prod
+    service_account: svc-prod
+    source: full
+    dq: {max_quarantine_pct: 1.0, min_rows: 10000}
+    requires_passed_in: qa
+    requires_approval: true     # approver must differ from the commit author
+releases_bucket: aidp-releases

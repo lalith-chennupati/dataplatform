@@ -2,6 +2,9 @@
   "identities": [
     {"name": "labadmin", "credentials": [{"accessKey": "labadmin", "secretKey": "labadmin-secret"}], "actions": ["Admin", "Read", "Write", "List", "Tagging"]},
     {"name": "finance", "credentials": [{"accessKey": "finance", "secretKey": "finance-secret"}], "actions": ["Read:bu-finance", "Write:bu-finance", "List:bu-finance"]},
-    {"name": "research", "credentials": [{"accessKey": "research", "secretKey": "research-secret"}], "actions": ["Read:bu-research", "Write:bu-research", "List:bu-research"]}
+    {"name": "research", "credentials": [{"accessKey": "research", "secretKey": "research-secret"}], "actions": ["Read:bu-research", "Write:bu-research", "List:bu-research"]},
+    {"name": "svc-dev", "credentials": [{"accessKey": "svc-dev", "secretKey": "svc-dev-secret"}], "actions": ["Read:aidp-dev", "Write:aidp-dev", "List:aidp-dev"]},
+    {"name": "svc-qa", "credentials": [{"accessKey": "svc-qa", "secretKey": "svc-qa-secret"}], "actions": ["Read:aidp-qa", "Write:aidp-qa", "List:aidp-qa"]},
+    {"name": "svc-prod", "credentials": [{"accessKey": "svc-prod", "secretKey": "svc-prod-secret"}], "actions": ["Read:aidp-prod", "Write:aidp-prod", "List:aidp-prod"]}
   ]
 }

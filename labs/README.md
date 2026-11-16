@@ -27,7 +27,7 @@ Many labs list more than one tier, e.g. `SIM / HW`. In those labs the SIM tier t
 L00 Orientation ─► L01 Lab environment
         │
         ├─► Track A  Storage engines (PowerScale, ObjectScale)        A01─A10
-        ├─► Track B  Data engines (Lakehouse, Spark, Search)          B01─B07
+        ├─► Track B  Data engines (Lakehouse, Spark, Search)          B01─B08
         ├─► Track C  Compute, fabric & infrastructure automation      C01─C08
         ├─► Track D  AI software & workloads (NIM, RAG, tuning, agents) D01─D09
         └─► Track E  Security, resilience, operations & FinOps        E01─E06
@@ -63,6 +63,7 @@ Suggested order for a first pass: L00 → L01 → A01 → A09 → B01 → B02 �
 | [B05](guides/B-data-engines/B05-ai-assisted-analytics.md) | AI-assisted analytics | Natural-language-to-SQL, AI SQL functions, MCP access to the analytics engine | DEMO | 2h | LAK, AGT |
 | [B06](guides/B-data-engines/B06-unstructured-search.md) | Unstructured search with the Data Search Engine | Elastic-based ingestion of PowerScale content, hybrid keyword + vector search, document-level security | SIM / DEMO | 4h | RAG, SEC |
 | [B07](guides/B-data-engines/B07-gpu-vector-indexing.md) | GPU-accelerated vector indexing | NVIDIA cuVS / GPU index build vs. CPU baseline | HW | 3h | RAG, CMP |
+| [B08](guides/B-data-engines/B08-dev-qa-prod-pipeline.md) | Deploy an AIDP pipeline dev → QA → prod | Data Processing + Data Analytics Engines, per-environment ObjectScale buckets and identities, Iceberg snapshot rollback | SIM / DEMO | 3h | PLT, ING, DAT |
 | **Track C - Compute, fabric & infrastructure** | | | | | |
 | [C01](guides/C-infrastructure/C01-idrac-redfish.md) | PowerEdge lifecycle with iDRAC & Redfish | iDRAC Redfish API, inventory, firmware, telemetry streaming, secure boot, lockdown mode | SIM / HW | 3h | CMP, SEC |
 | [C02](guides/C-infrastructure/C02-openmanage-enterprise.md) | Fleet management with OpenManage Enterprise | Discovery, deployment templates, firmware baselines, compliance, Ansible `dellemc.openmanage` | DEMO / HW | 3h | OPS, PLT |
@@ -199,6 +200,11 @@ Suggested order for a first pass: L00 → L01 → A01 → A09 → B01 → B02 �
 - **Activities:** Build indexes over 10M+ vectors on CPU and GPU. Compare build time, recall@10 and QPS.
 - **Done when:** A sizing note for index tiers (`RAG-06`) exists.
 
+### B08 - Deploy an AIDP pipeline dev → QA → prod
+- **Covers:** Environment separation (bucket, catalog schemas, service identity per environment), versioned schema migrations, data-quality promotion gates, four-eyes prod approval, Iceberg snapshot rollback, CI/CD.
+- **Activities:** Promote the B04 pipeline's commit from dev to QA to prod. Let a QA gate catch bad data and restore QA. Roll prod back. Map the gates to your CI/CD tool.
+- **Done when:** One commit has passed releases in all three environments, cross-environment access is denied, and release records exist as evidence (`PLT-09`, `ING-06`).
+
 ## Track C - Compute, fabric & infrastructure
 
 ### C01 - PowerEdge lifecycle with iDRAC & Redfish
@@ -333,7 +339,7 @@ Suggested order for a first pass: L00 → L01 → A01 → A09 → B01 → B02 �
 | PowerScale (OneFS) | A01-A08, B06, D03, E02, E04 |
 | ObjectScale | A09, A10, B02, D04, D07 |
 | Data Analytics Engine (Starburst/Trino) | B01-B03, B05 |
-| Data Processing Engine (Spark) | B04 |
+| Data Processing Engine (Spark) | B04, B08 |
 | Data Search Engine (Elastic) / vector search | B06, B07, D03 |
 | PowerEdge / iDRAC / OpenManage | C01, C02, C04 |
 | Omnia & cluster provisioning | C03 |

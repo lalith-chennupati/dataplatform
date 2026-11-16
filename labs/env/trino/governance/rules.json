@@ -2,14 +2,21 @@
   "catalogs": [
     {"user": "trino|admin", "catalog": ".*", "allow": "all"},
     {"user": "fin|ana", "catalog": "(postgresql|iceberg|system|llm)", "allow": "read-only"},
+    {"user": "svc-(dev|qa|prod)", "catalog": "(iceberg|system)", "allow": "all"},
     {"catalog": ".*", "allow": "none"}
   ],
   "schemas": [
     {"user": "trino|admin", "owner": true},
-    {"user": "fin|ana", "schema": "(crm|curated|consumption|information_schema|runtime)", "owner": false}
+    {"user": "svc-dev", "schema": "dev_.*", "owner": true},
+    {"user": "svc-qa", "schema": "qa_.*", "owner": true},
+    {"user": "svc-prod", "schema": "prod_.*", "owner": true},
+    {"user": "fin|ana", "schema": "(crm|curated|consumption|prod_consumption|information_schema|runtime)", "owner": false}
   ],
   "tables": [
     {"user": "trino|admin", "privileges": ["SELECT", "INSERT", "DELETE", "UPDATE", "OWNERSHIP", "GRANT_SELECT"]},
+    {"user": "svc-dev", "catalog": "iceberg", "schema": "dev_.*", "privileges": ["SELECT", "INSERT", "DELETE", "UPDATE", "OWNERSHIP"]},
+    {"user": "svc-qa", "catalog": "iceberg", "schema": "qa_.*", "privileges": ["SELECT", "INSERT", "DELETE", "UPDATE", "OWNERSHIP"]},
+    {"user": "svc-prod", "catalog": "iceberg", "schema": "prod_.*", "privileges": ["SELECT", "INSERT", "DELETE", "UPDATE", "OWNERSHIP"]},
     {"user": "fin", "catalog": "postgresql", "schema": "crm", "table": "customers", "privileges": ["SELECT"]},
     {"user": "ana", "catalog": "postgresql", "schema": "crm", "table": "customers", "privileges": ["SELECT"],
      "filter": "region = 'EMEA'",
@@ -17,7 +24,7 @@
        {"name": "email", "mask": "'***masked***'"},
        {"name": "name", "mask": "substr(name, 1, 1) || '***'"}
      ]},
-    {"user": "fin|ana", "catalog": "iceberg", "schema": "(curated|consumption)", "privileges": ["SELECT"]},
+    {"user": "fin|ana", "catalog": "iceberg", "schema": "(curated|consumption|prod_consumption)", "privileges": ["SELECT"]},
     {"catalog": "system", "schema": "runtime", "table": "queries", "privileges": ["SELECT"]},
     {"schema": "information_schema", "privileges": ["SELECT"]}
   ],
