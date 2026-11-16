@@ -36,7 +36,8 @@ def denied(fn):
 
 @check("published ports bound to loopback only", "SEC-04 / NET")
 def _():
-    out = subprocess.run(["docker", "compose", "ps", "--format", "{{.Service}}\t{{.Ports}}"], cwd=ENV, capture_output=True, text=True).stdout
+    out = subprocess.run(["docker", "ps", "--filter", "label=com.docker.compose.project=aifactory-lab", "--format",
+                          '{{.Label "com.docker.compose.service"}}\t{{.Ports}}'], capture_output=True, text=True).stdout  # all profiles
     wide = [l.split("\t")[0] for l in out.splitlines() if "0.0.0.0:" in l or "[::]:" in l]
     return ("FAIL", "listening on all interfaces: " + ", ".join(wide)) if wide else ("PASS", "all ports on 127.0.0.1")
 

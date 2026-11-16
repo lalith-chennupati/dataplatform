@@ -1,5 +1,5 @@
 # Lab E01: hardening overlay. Binds every published port to loopback and removes anonymous Grafana admin.
-#   docker compose -f docker-compose.yml -f docker-compose.hardened.yml --profile obs --profile ai up -d
+#   docker compose -f docker-compose.yml -f docker-compose.hardened.yml --profile core --profile obs --profile ai up -d
 # It does not add TLS or authentication to Trino/Elasticsearch/MLflow: see the E01 guide for those steps.
 services:
   s3:            {ports: !override ["127.0.0.1:8333:8333"]}

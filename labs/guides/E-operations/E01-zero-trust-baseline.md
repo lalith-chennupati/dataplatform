@@ -19,7 +19,7 @@ Expected on the default stack: S3 anonymous access and tenant isolation PASS; po
 ```bash
 export GRAFANA_ADMIN_PASSWORD="$(openssl rand -base64 18)"   # keep it in your password manager, not in Git
 docker compose -f docker-compose.yml -f docker-compose.governance.yml -f docker-compose.hardened.yml \
-  --profile obs --profile ai --profile infra up -d
+  --profile core --profile obs --profile ai --profile infra up -d
 $PY ops/zt_scan.py | tee ../evidence/e01-scan-after.txt
 ```
 [docker-compose.hardened.yml](../../env/docker-compose.hardened.yml) binds every published port to `127.0.0.1` and disables anonymous Grafana. Expected: loopback and Grafana checks now PASS. TLS and Trino/Elasticsearch/MLflow authentication still FAIL: the overlay does not fix those, Steps 3-5 do.
@@ -75,4 +75,4 @@ Install Dell CSM Authorization (proxy server + sidecar) for the PowerScale CSI d
 `SEC-01` identity provider for users and services. `SEC-02` access model (RBAC/ABAC). `SEC-04` TLS everywhere, including inside the cluster. `SEC-05` secrets manager. `SEC-08` image signing and admission. `SEC-09` privileged access to OneFS, iDRAC, Kubernetes. `NET-05` tenant segmentation. `STO-06` storage multi-tenancy model.
 
 ## Cleanup
-`docker compose -f docker-compose.yml -f docker-compose.governance.yml --profile obs --profile ai --profile infra up -d` (back to the default bindings); `rm -rf trino/tls`; `kubectl delete ns team-a team-b` if C05 does not need them.
+`docker compose -f docker-compose.yml -f docker-compose.governance.yml --profile core --profile obs --profile ai --profile infra up -d` (back to the default bindings); `rm -rf trino/tls`; `kubectl delete ns team-a team-b` if C05 does not need them.
