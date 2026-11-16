@@ -231,8 +231,10 @@ def rollback(args):
     if not live:
         sys.exit(f"nothing deployed to {env}")
     current = live[-1]
+    # After a rollback, "current" is an older release: only go further back from its original deploy time.
+    cutoff = current.get("release_finished_at", current["finished_at"])
     targets = [r for r in live[:-1] if r["status"] == "passed" and r["git_sha"] != current["git_sha"]
-               and (not args.to or r["git_sha"].startswith(args.to))]
+               and (r["git_sha"].startswith(args.to) if args.to else r["finished_at"] < cutoff)]
     if not targets:
         sys.exit(f"no earlier passed release{' ' + args.to if args.to else ''} in {env} to roll back to")
     target = targets[-1]
@@ -242,7 +244,8 @@ def rollback(args):
     extra = set(snapshots(cur, env)) - set(target["snapshots_after"])
     for t in sorted(extra):
         print(f"  kept {t}: not part of {short(target['git_sha'])} (additive migration, unused by that release)")
-    record({**target, "status": "rolled-back", "rolled_back_from": current["git_sha"], "approved_by": args.approved_by})
+    record({**target, "status": "rolled-back", "rolled_back_from": current["git_sha"], "approved_by": args.approved_by,
+            "release_finished_at": target.get("release_finished_at", target["finished_at"])})
 
 
 def destroy(args):
