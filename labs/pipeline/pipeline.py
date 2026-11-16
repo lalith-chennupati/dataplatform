@@ -185,14 +185,18 @@ def deploy(args):
     rel["migrations_applied"] = apply_migrations(cur, env, sha)
     rel["input_snapshot"] = snapshots_of(cur, f"{env}_raw.orders_events")
     rel["snapshots_before"] = snapshots(cur, env)
-    ok = run_spark(env)
-    print(f"transforms: {'ok' if ok else 'FAILED'}")
     rel["dq"] = {}
-    if ok:
-        for check, passed in q(cur, render((HERE / "dq.sql").read_text(), env)):
-            rel["dq"][check] = passed
-            print(f"  [{'PASS' if passed else 'FAIL'}] {check}")
-        ok = all(rel["dq"].values())
+    try:
+        ok = run_spark(env)
+        print(f"transforms: {'ok' if ok else 'FAILED'}")
+        if ok:
+            for check, passed in q(cur, render((HERE / "dq.sql").read_text(), env)):
+                rel["dq"][check] = passed
+                print(f"  [{'PASS' if passed else 'FAIL'}] {check}")
+            ok = bool(rel["dq"]) and all(rel["dq"].values())
+    except Exception as e:  # an error after Spark committed must not leave unvalidated outputs live
+        print(f"gate error: {e}", file=sys.stderr)
+        rel["error"], ok = str(e)[:500], False
     if not ok:
         print(f"gate failed: restoring {env} outputs to their pre-deploy snapshots")
         restore(cur, rel["snapshots_before"])
