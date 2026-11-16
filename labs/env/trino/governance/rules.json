@@ -1,7 +1,7 @@
 {
   "catalogs": [
     {"user": "trino|admin", "catalog": ".*", "allow": "all"},
-    {"user": "fin|ana", "catalog": "(postgresql|iceberg|system)", "allow": "read-only"},
+    {"user": "fin|ana", "catalog": "(postgresql|iceberg|system|llm)", "allow": "read-only"},
     {"catalog": ".*", "allow": "none"}
   ],
   "schemas": [
@@ -20,6 +20,10 @@
     {"user": "fin|ana", "catalog": "iceberg", "schema": "(curated|consumption)", "privileges": ["SELECT"]},
     {"catalog": "system", "schema": "runtime", "table": "queries", "privileges": ["SELECT"]},
     {"schema": "information_schema", "privileges": ["SELECT"]}
+  ],
+  "functions": [
+    {"catalog": "llm", "schema": "ai", "privileges": ["EXECUTE"]},
+    {"catalog": "system", "schema": "builtin", "privileges": ["EXECUTE"]}
   ],
   "queries": [
     {"user": "trino|admin", "allow": ["execute", "kill", "view"]},
