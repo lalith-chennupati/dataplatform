@@ -74,6 +74,9 @@ class H(BaseHTTPRequestHandler):
             if "temp" in q: state["temp"][int(q.get("gpu", 0))] = int(q["temp"])
             if "xid" in q: state["xid"][int(q.get("gpu", 0))] = int(q["xid"])
             if "quota" in q: state["quota"] = float(q["quota"])
+            if "link" in q and q["link"] not in RAILS:
+                self.send_response(400); self.end_headers()
+                self.wfile.write(f"unknown link {q['link']}; use one of {RAILS}\n".encode()); return
             if "link" in q: state["links"][q["link"]] = int(q.get("up", 0))
             body = json.dumps(state, default=str)
         else:
