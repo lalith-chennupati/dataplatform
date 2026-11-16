@@ -3,3 +3,4 @@ __pycache__/
 .venv/
 ~$*
 labs/env/ai/adapters/
+labs/env/ai/traces/
