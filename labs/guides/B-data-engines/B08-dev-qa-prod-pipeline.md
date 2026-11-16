@@ -74,7 +74,7 @@ Expected (about 15 s per deploy on the SIM; the check order may differ):
 ```
 migrations: V001__create_tables.sql
 dev_raw.orders_events: 808 rows (sample)
-deploying 2903abd5d603 to dev as svc-dev
+deploying 4a986a0467c7 to dev as svc-dev
 migrations: none pending
 transforms: ok
   [PASS] silver has at least 100 rows
@@ -82,7 +82,7 @@ transforms: ok
   [PASS] silver amounts positive
   [PASS] gold reconciles to silver
   [PASS] quarantine <= 5.0% of silver
-release record: s3://aidp-releases/dev/2026-11-16T17:49:57+00:00-2903abd5d603.json  status=passed
+release record: s3://aidp-releases/dev/2026-11-16T17:55:44.512301+00:00-4a986a0467c7.json  status=passed
 ```
 Your commit ID differs. If you edit anything under `labs/pipeline/` and deploy without committing, the release is recorded as `<commit>-dirty`. Dev accepts that; QA and prod refuse it.
 

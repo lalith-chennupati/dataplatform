@@ -132,7 +132,7 @@ def releases(env):
 
 
 def record(rel):
-    rel["finished_at"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+    rel["finished_at"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="microseconds")
     key = f"{rel['env']}/{rel['finished_at']}-{rel['git_sha'][:12]}.json"
     s3().put_object(Bucket=CFG["releases_bucket"], Key=key, Body=json.dumps(rel, indent=2).encode())
     print(f"release record: s3://{CFG['releases_bucket']}/{key}  status={rel['status']}")
@@ -212,11 +212,11 @@ def snapshots_of(cur, table):
 
 
 def status(_):
-    print(f"{'env':5} {'commit':18} {'status':11} {'finished (UTC)':25} approved_by")
+    print(f"{'env':5} {'commit':18} {'status':11} {'finished (UTC)':32} approved_by")
     for env in CFG["order"]:
         rs = releases(env)
         for r in rs[-3:]:
-            print(f"{env:5} {short(r['git_sha']):18} {r['status']:11} {r['finished_at']:25} {r.get('approved_by') or '-'}")
+            print(f"{env:5} {short(r['git_sha']):18} {r['status']:11} {r['finished_at']:32} {r.get('approved_by') or '-'}")
         if not rs:
             print(f"{env:5} (never deployed)")
 
