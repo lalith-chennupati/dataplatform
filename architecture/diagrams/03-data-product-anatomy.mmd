@@ -1,0 +1,29 @@
+%% What every data product contains (DAT-11 data contract, DAT-07 lineage, LAK-09 access).
+flowchart LR
+  in1["Input port<br/>source system or<br/>upstream product"] --> code
+  subgraph DP["Data product: sales.orders"]
+    direction TB
+    code["Code<br/>SQL / Spark in Git<br/>CI/CD dev → QA → prod"]
+    store["Data<br/>Iceberg tables on ObjectScale<br/>snapshots = versions"]
+    contract["Contract<br/>schema, freshness SLO,<br/>quality gate, change policy"]
+    meta["Metadata<br/>owner, steward, classification,<br/>lineage, cost tag"]
+    code --> store
+    contract -.-> code
+    meta -.-> store
+  end
+  store --> out1["Output port: SQL<br/>Data Analytics Engine table"]
+  store --> out2["Output port: files<br/>read-only S3 snapshot"]
+  store --> out3["Output port: events<br/>change feed / topic"]
+  subgraph PLAT["Self-serve platform (AI Factory team)"]
+    direction TB
+    p1["Pipeline templates<br/>and CI runners"]
+    p2["DQ gate and<br/>release records"]
+    p3["Catalog registration<br/>and lineage capture"]
+    p4["Access policy<br/>as code"]
+  end
+  PLAT -.-> DP
+  out1 & out2 & out3 --> cons["Consumers<br/>other domains, BI, ML, apps"]
+  classDef port fill:#d4e6f7,stroke:#0672cb
+  classDef part fill:#ffffff,stroke:#0672cb
+  class in1,out1,out2,out3 port
+  class code,store,contract,meta part

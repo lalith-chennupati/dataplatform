@@ -1,0 +1,44 @@
+%% Sample physical view. Node counts and models are placeholders to be sized from CMP, STO and NET questionnaire answers.
+flowchart LR
+  users["Users, BI tools, apps"] --> fe
+  idp["Enterprise IdP<br/>SSO, service accounts"] --- fe
+  subgraph FE["Front-end network<br/>PowerSwitch, 100GbE"]
+    fe(("front-end"))
+  end
+  subgraph CMP["Compute"]
+    direction TB
+    ctl["Kubernetes / OpenShift<br/>control plane<br/>3 x PowerEdge R-series"]
+    eng["Data engine workers<br/>Spark, Trino, Search<br/>N x PowerEdge R-series"]
+    xe["GPU servers<br/>N x PowerEdge XE, 8 GPUs each"]
+  end
+  subgraph FAB["Back-end and storage networks"]
+    direction TB
+    be(("GPU fabric<br/>Spectrum-X Ethernet<br/>or InfiniBand"))
+    sn(("Storage network<br/>100-400GbE<br/>NFS / S3 over RDMA"))
+  end
+  subgraph ST["Storage"]
+    direction TB
+    ps["PowerScale all-flash cluster<br/>files, training data, GDS"]
+    os["ObjectScale<br/>S3 lakehouse, models"]
+  end
+  subgraph VAULT["Isolated recovery site"]
+    cr["PowerProtect Data Manager<br/>+ Cyber Recovery vault<br/>(air gap)"]
+  end
+  subgraph MG["Management network"]
+    direction TB
+    ome["OpenManage Enterprise,<br/>Omnia, APEX AIOps"]
+    idrac["iDRAC on every server"]
+  end
+  fe --- ctl & eng & xe
+  xe --- be
+  eng & xe --- sn
+  sn --- ps & os
+  ps & os -. "replication,<br/>vault copy" .-> cr
+  ome --- idrac
+  idrac -.- CMP
+  classDef net fill:#ffffff,stroke:#4d4d4d
+  classDef dell fill:#e8f1fb,stroke:#0672cb
+  classDef ext fill:#f5f5f5,stroke:#7a7a7a
+  class fe,be,sn net
+  class ctl,eng,xe,ps,os,idrac,ome,cr dell
+  class users,idp ext

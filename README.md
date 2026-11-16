@@ -12,6 +12,7 @@ Enterprise standards for the Dell AI Factory and Dell AI Data Platform.
 | `questionnaire/ai-factory-standards-questionnaire.md` | GitHub-readable edition |
 | `tools/build_questionnaire.py` | Regenerates the three editions from the YAML |
 | `labs/README.md` | Lab catalog: 43 hands-on labs across Dell AI Factory and AI Data Platform features, with environment tier (SIM / DEMO / HW) and the questionnaire domains each lab informs |
+| `architecture/README.md` | Sample data domains, data products and architecture diagrams (logical, domain map, data flow, dev/QA/prod promotion, physical, RAG access control) for AIDP / AI Factory; generated from `architecture/data-products.yaml` by `tools/build_architecture.py` |
 
 ## How the questionnaire is used
 

@@ -1,0 +1,83 @@
+%% Logical architecture: Dell AI Data Platform (AIDP) inside the Dell AI Factory. Sample - product names to be confirmed with Dell.
+flowchart LR
+  subgraph SRC["Enterprise data sources"]
+    direction TB
+    s1["ERP<br/>orders, ledger"]
+    s2["CRM<br/>customers"]
+    s3["WMS / telematics<br/>inventory, shipments"]
+    s4["Service desk<br/>cases"]
+    s5["File shares, SharePoint<br/>manuals, policies"]
+  end
+
+  subgraph ING["Ingest"]
+    direction TB
+    i1["CDC and batch<br/>connectors"]
+    i2["Streaming<br/>Kafka"]
+    i3["File drop<br/>NFS / SMB / S3"]
+  end
+
+  subgraph AIDP["Dell AI Data Platform"]
+    direction TB
+    subgraph ENG["Data engines"]
+      direction TB
+      dpe["Data Processing Engine<br/>Spark: clean, join, chunk, embed"]
+      dae["Data Analytics Engine<br/>Trino / Starburst: SQL, federation"]
+      dse["Data Search Engine<br/>hybrid keyword + vector"]
+    end
+    subgraph META["Catalog and governance"]
+      direction TB
+      cat["Iceberg REST catalog<br/>tables, snapshots"]
+      dpc["Data product catalog<br/>owners, contracts, lineage"]
+      pol["Access policies<br/>row / column masks, document ACLs"]
+    end
+    subgraph STOR["Storage engines"]
+      direction TB
+      ps["PowerScale (OneFS)<br/>files: raw docs, training sets<br/>NFS / SMB / S3, GPUDirect"]
+      os["ObjectScale<br/>S3: Iceberg lakehouse,<br/>model artefacts, checkpoints"]
+    end
+  end
+
+  subgraph AIF["Dell AI Factory: compute and AI software"]
+    direction TB
+    k8s["Kubernetes / OpenShift<br/>GPU quotas per team"]
+    gpu["PowerEdge XE GPU servers<br/>train, fine-tune, infer"]
+    nim["NVIDIA AI Enterprise<br/>NIM, NeMo Guardrails<br/>Dell Enterprise Hub models"]
+    mlo["MLOps<br/>MLflow registry, evaluation"]
+    gw["AI gateway<br/>routing, rate limits, logging"]
+  end
+
+  subgraph CON["Consumers"]
+    direction TB
+    c1["BI dashboards"]
+    c2["Analysts (SQL)"]
+    c3["Data scientists<br/>notebooks"]
+    c4["AI apps and agents<br/>support assistant"]
+  end
+
+  subgraph X["Cross-cutting services"]
+    direction TB
+    x1["Identity: IdP, SSO,<br/>service accounts"]
+    x2["Secrets: Vault"]
+    x3["Observability: Prometheus,<br/>Grafana, APEX AIOps"]
+    x4["Protection: PowerProtect,<br/>Cyber Recovery vault"]
+    x5["FinOps: showback<br/>by team tag"]
+    x6["Network: PowerSwitch,<br/>Spectrum-X / InfiniBand"]
+  end
+
+  SRC --> ING
+  ING -- "tables to ObjectScale,<br/>files to PowerScale" --> STOR
+  STOR <-- "read / write<br/>Iceberg, files" --> ENG
+  ENG --- META
+  STOR <-- "training data, checkpoints,<br/>model artefacts (GPUDirect)" --> AIF
+  ENG -- "retrieval, features" --> AIF
+  ENG -- "SQL, BI" --> CON
+  AIF -- "inference, assistants" --> CON
+  X -.- AIDP
+  X -.- AIF
+
+  classDef dell fill:#e8f1fb,stroke:#0672cb,color:#0b2341
+  classDef ext fill:#f5f5f5,stroke:#7a7a7a
+  classDef ai fill:#f1e6fa,stroke:#6a1b9a
+  class dpe,dae,dse,ps,os,gpu dell
+  class nim,mlo,gw,k8s ai
+  class s1,s2,s3,s4,s5,c1,c2,c3,c4 ext

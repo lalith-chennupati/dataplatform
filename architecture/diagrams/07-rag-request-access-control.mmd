@@ -1,0 +1,26 @@
+%% One support-assistant request end to end: identity, guardrails, document ACLs, citations, audit (RAG-03, MLO-09, AGT-06).
+sequenceDiagram
+  autonumber
+  actor A as Support agent
+  participant App as Support assistant<br/>(service.support_assistant)
+  participant IdP as Enterprise IdP
+  participant GW as AI gateway
+  participant GR as Guardrails
+  participant DSE as Data Search Engine<br/>(service.knowledge_index)
+  participant NIM as NIM LLM on PowerEdge XE
+  participant LOG as Audit log / SIEM
+  A->>App: Question
+  App->>IdP: Validate SSO token, get groups
+  IdP-->>App: user = agent, groups = [service, emea]
+  App->>GW: Request + user identity
+  GW->>GR: Input check (prompt injection, PII)
+  GR-->>GW: allowed
+  GW->>DSE: Hybrid search, filter acl IN user groups
+  DSE-->>GW: Top chunks the user may read, with sources
+  GW->>NIM: Prompt with permitted chunks only
+  NIM-->>GW: Draft answer
+  GW->>GR: Output check (grounded, cites sources, no PII)
+  GR-->>GW: allowed
+  GW-->>App: Answer + citations
+  App-->>A: Answer with links to source documents
+  GW->>LOG: user, model version, chunk ids, tokens, guardrail results
