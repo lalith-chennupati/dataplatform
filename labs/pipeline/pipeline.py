@@ -129,8 +129,9 @@ def run_spark(env):
 
 def releases(env):
     c, out = s3(), []
-    for o in c.list_objects_v2(Bucket=CFG["releases_bucket"], Prefix=f"{env}/").get("Contents", []):
-        out.append(json.loads(c.get_object(Bucket=CFG["releases_bucket"], Key=o["Key"])["Body"].read()))
+    for page in c.get_paginator("list_objects_v2").paginate(Bucket=CFG["releases_bucket"], Prefix=f"{env}/"):
+        for o in page.get("Contents", []):
+            out.append(json.loads(c.get_object(Bucket=CFG["releases_bucket"], Key=o["Key"])["Body"].read()))
     return sorted(out, key=lambda r: r["finished_at"])
 
 
