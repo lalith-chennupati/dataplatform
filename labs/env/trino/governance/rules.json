@@ -25,6 +25,9 @@
     {"catalog": "llm", "schema": "ai", "privileges": ["EXECUTE"]},
     {"catalog": "system", "schema": "builtin", "privileges": ["EXECUTE"]}
   ],
+  "system_information": [
+    {"user": "trino|admin", "allow": ["read"]}
+  ],
   "queries": [
     {"user": "trino|admin", "allow": ["execute", "kill", "view"]},
     {"allow": ["execute"]}

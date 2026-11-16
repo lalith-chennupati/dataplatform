@@ -5,6 +5,8 @@ rule_files: [/etc/prometheus/alerts.yml]
 scrape_configs:
   - job_name: trino
     metrics_path: /metrics
+    http_headers:                  # Trino identifies every HTTP caller; without a user /metrics returns 401
+      X-Trino-User: {values: [admin]}
     static_configs: [{targets: ["trino:8080"]}]
   - job_name: prometheus
     static_configs: [{targets: ["localhost:9090"]}]
