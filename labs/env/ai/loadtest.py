@@ -19,7 +19,7 @@ def one(a, i):
     t0, ttft, chunks, usage = time.perf_counter(), None, 0, None
     with requests.post(f"{a.url}/chat/completions", json=body, headers=hdr, stream=True, timeout=600) as r:
         r.raise_for_status()
-        for line in r.iter_lines():
+        for line in r.iter_lines(chunk_size=1):  # default 512-byte buffering would delay the first token
             if not line.startswith(b"data: ") or line == b"data: [DONE]":
                 continue
             d = json.loads(line[6:])
