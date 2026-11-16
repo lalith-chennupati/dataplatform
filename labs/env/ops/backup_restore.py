@@ -28,8 +28,15 @@ def get(key):
     return s3.get_object(Bucket=VAULT, Key=key)["Body"].read()
 
 
-def dcp(src, dst):
-    subprocess.run(["docker", "compose", "cp", src, dst], cwd=ENV, check=True, capture_output=True)
+def compose(*args):
+    subprocess.run(["docker", "compose", *args], cwd=ENV, check=True, capture_output=True)
+
+
+def cold_copy(svc, src, dst):
+    # SQLite files are only consistent while the server is stopped (no open transaction or journal)
+    compose("stop", svc)
+    try: compose("cp", src, dst)
+    finally: compose("start", svc)
 
 
 def backup(a):
@@ -40,7 +47,7 @@ def backup(a):
     docs = [{"_id": h["_id"], **h["_source"]} for h in helpers.scan(ES, index=INDEX, query={"query": {"match_all": {}}})]
     m["es"] = put(f"{ts}/es/{INDEX}.json", json.dumps({"mappings": mapping, "docs": docs}).encode()) | {"docs": len(docs)}
     for name, (svc, path) in FILES.items():
-        tmp = ENV / "ops" / f".{name}.db"; dcp(f"{svc}:{path}", str(tmp))
+        tmp = ENV / "ops" / f".{name}.db"; cold_copy(svc, f"{svc}:{path}", str(tmp))
         m[name] = put(f"{ts}/{name}/{pathlib.Path(path).name}", tmp.read_bytes()); tmp.unlink()
     objs = [o["Key"] for p in s3.get_paginator("list_objects_v2").paginate(Bucket="checkpoints") for o in p.get("Contents", [])]
     for k in objs:
@@ -70,9 +77,8 @@ def restore(a):
     for name, (svc, path) in FILES.items():
         if name in only:
             tmp = ENV / "ops" / f".{name}.db"; tmp.write_bytes(get(m[name]["key"]))
-            dcp(str(tmp), f"{svc}:{path}"); tmp.unlink()
-            subprocess.run(["docker", "compose", "restart", svc], cwd=ENV, check=True, capture_output=True)
-            print(f"{name}: restored {path} and restarted {svc}")
+            cold_copy(svc, str(tmp), f"{svc}:{path}"); tmp.unlink()
+            print(f"{name}: restored {path} with {svc} stopped")
     if "checkpoints" in only:
         pre = f"{ts}/checkpoints/"
         keys = [o["Key"] for p in s3.get_paginator("list_objects_v2").paginate(Bucket=VAULT, Prefix=pre) for o in p.get("Contents", [])]
