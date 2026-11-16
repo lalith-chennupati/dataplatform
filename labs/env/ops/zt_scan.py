@@ -19,6 +19,7 @@ def check(name, ctrl):
     def wrap(fn):
         try: status, ev = fn()
         except requests.ConnectionError: status, ev = "SKIP", "service not running"
+        except RuntimeError as e: status, ev = "FAIL", str(e)[:120]
         results.append((status, ctrl, name, ev))
     return wrap
 
@@ -29,9 +30,16 @@ def s3(user=None, unsigned=False):
     return boto3.client("s3", endpoint_url=S3, region_name=env["S3_REGION"], **kw)
 
 
+def auth_result(r):
+    return ("PASS", f"HTTP {r.status_code}") if r.status_code in (401, 403) else ("FAIL", f"unexpected HTTP {r.status_code}, control not proven")
+
+
 def denied(fn):
     try: fn(); return False
-    except botocore.exceptions.ClientError: return True
+    except botocore.exceptions.ClientError as e:
+        if e.response["Error"]["Code"] in ("AccessDenied", "InvalidAccessKeyId", "SignatureDoesNotMatch") \
+                or e.response["ResponseMetadata"]["HTTPStatusCode"] == 403: return True
+        raise RuntimeError(f"not an access denial: {e}")
 
 
 @check("published ports bound to loopback only", "SEC-04 / NET")
@@ -66,25 +74,25 @@ def _():
 @check("Trino requires authentication", "SEC-01")
 def _():
     r = requests.post("http://localhost:8080/v1/statement", data="SELECT 1", headers={"X-Trino-User": "mallory"}, timeout=5)
-    return ("FAIL", "any user name is accepted without a password (user 'mallory')") if r.status_code == 200 else ("PASS", f"HTTP {r.status_code}")
+    return ("FAIL", "any user name is accepted without a password (user 'mallory')") if r.status_code == 200 else auth_result(r)
 
 
 @check("Elasticsearch requires authentication", "SEC-01")
 def _():
     r = requests.get("http://localhost:9200/_cat/indices", timeout=5)
-    return ("FAIL", "index list readable without credentials") if r.status_code == 200 else ("PASS", f"HTTP {r.status_code}")
+    return ("FAIL", "index list readable without credentials") if r.status_code == 200 else auth_result(r)
 
 
 @check("MLflow requires authentication", "SEC-01 / MLO-03")
 def _():
     r = requests.get("http://localhost:5000/api/2.0/mlflow/registered-models/search", timeout=5)
-    return ("FAIL", "model registry readable and writable without credentials") if r.status_code == 200 else ("PASS", f"HTTP {r.status_code}")
+    return ("FAIL", "model registry readable and writable without credentials") if r.status_code == 200 else auth_result(r)
 
 
 @check("Grafana has no anonymous admin", "SEC-02")
 def _():
     r = requests.get("http://localhost:3000/api/org", timeout=5)
-    return ("FAIL", "anonymous user has Admin on the org") if r.status_code == 200 else ("PASS", f"HTTP {r.status_code}")
+    return ("FAIL", "anonymous user has Admin on the org") if r.status_code == 200 else auth_result(r)
 
 
 @check("no secrets tracked in Git", "SEC-05")
