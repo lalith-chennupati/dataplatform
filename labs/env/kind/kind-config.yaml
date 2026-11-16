@@ -1,0 +1,11 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: aifactory-lab
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - {containerPort: 30080, hostPort: 30080}
+  - role: worker
+    labels: {pool: cpu}
+  - role: worker
+    labels: {pool: gpu-sim}
