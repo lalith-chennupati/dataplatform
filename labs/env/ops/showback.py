@@ -40,5 +40,5 @@ print(f"{'total':12} {'':8} {'':10} {'':7} {total:11.2f}")
 if unlabelled:
     print("\nUnlabelled workloads (charged to UNALLOCATED until fixed):")
     for ns, w, gh, miss in unlabelled: print(f"  {ns}/{w}: {gh:.1f} GPU-h, missing {', '.join(miss)}")
-    share = sum(x[2] for x in unlabelled) / sum(c["gpu_hours"] for c in bill.values())
-    print(f"  {share:.0%} of GPU-hours are unallocated")
+    total_gh = sum(c["gpu_hours"] for c in bill.values())
+    if total_gh: print(f"  {sum(x[2] for x in unlabelled) / total_gh:.0%} of GPU-hours are unallocated")
