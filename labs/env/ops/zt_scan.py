@@ -101,7 +101,11 @@ def _():
     ns = subprocess.run(["kubectl", "get", "ns", "-o", "jsonpath={.items[*].metadata.name}"], capture_output=True, text=True).stdout.split()
     teams = [n for n in ns if n.startswith("team-")]
     if not teams: return "SKIP", "no team-* namespaces (create them with C05)"
-    missing = [n for n in teams if not any(p["metadata"]["namespace"] == n and p["spec"].get("podSelector") == {} for p in nps)]
+    def deny_all(p):
+        s = p["spec"]
+        return s.get("podSelector") == {} and {"Ingress", "Egress"} <= set(s.get("policyTypes", [])) \
+            and not s.get("ingress") and not s.get("egress")
+    missing = [n for n in teams if not any(p["metadata"]["namespace"] == n and deny_all(p) for p in nps)]
     return ("FAIL", "no default-deny in " + ", ".join(missing)) if missing else ("PASS", "default-deny in " + ", ".join(teams))
 
 
