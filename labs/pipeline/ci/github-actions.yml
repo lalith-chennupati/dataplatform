@@ -1,0 +1,59 @@
+# Example CI/CD for lab B08: promote one commit dev -> QA -> prod. Untested here; adapt before use.
+# Copy to .github/workflows/orders-pipeline.yml in the repo that owns the pipeline.
+# Needs one self-hosted runner per environment that can reach that environment's AIDP endpoints,
+# and GitHub Environments "dev", "qa" and "production" holding that environment's endpoints and service-account secret.
+# On "production" set Required reviewers and "Prevent self-review" (Settings > Environments).
+name: orders-pipeline
+on:
+  push:
+    branches: [main]
+    paths: ["labs/pipeline/**"]
+  workflow_dispatch:
+concurrency: orders-pipeline          # one promotion at a time
+permissions: {contents: read, actions: read}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install trino boto3 pyyaml && python -m py_compile labs/pipeline/pipeline.py
+
+  dev:
+    needs: test
+    runs-on: [self-hosted, aidp-dev]
+    environment: dev
+    env: &aidp
+      AIDP_TRINO_HOST: ${{ vars.AIDP_TRINO_HOST }}
+      AIDP_TRINO_PORT: ${{ vars.AIDP_TRINO_PORT }}
+      AIDP_S3_ENDPOINT: ${{ vars.AIDP_S3_ENDPOINT }}
+      AIDP_S3_REGION: ${{ vars.AIDP_S3_REGION }}
+      AIDP_S3_ACCESS_KEY: ${{ vars.AIDP_RELEASES_ACCESS_KEY }}     # identity that writes release records
+      AIDP_S3_SECRET_KEY: ${{ secrets.AIDP_RELEASES_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 labs/pipeline/pipeline.py deploy --env dev
+        env: {AIDP_SVC_DEV_SECRET: "${{ secrets.AIDP_SVC_SECRET }}"}
+
+  qa:
+    needs: dev
+    runs-on: [self-hosted, aidp-qa]
+    environment: qa
+    env: *aidp
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 labs/pipeline/pipeline.py deploy --env qa
+        env: {AIDP_SVC_QA_SECRET: "${{ secrets.AIDP_SVC_SECRET }}"}
+
+  prod:
+    needs: qa
+    runs-on: [self-hosted, aidp-prod]
+    environment: production           # the job waits here until a required reviewer approves
+    env: *aidp
+    steps:
+      - uses: actions/checkout@v4
+      - id: approver
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: echo "login=$(gh api repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals --jq '.[0].user.login')" >> "$GITHUB_OUTPUT"
+      - run: python3 labs/pipeline/pipeline.py deploy --env prod --approved-by "${{ steps.approver.outputs.login }}"
+        env: {AIDP_SVC_PROD_SECRET: "${{ secrets.AIDP_SVC_SECRET }}"}
