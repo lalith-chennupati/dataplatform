@@ -1,0 +1,55 @@
+%% Identity federation: corporate IdP -> Keycloak (one realm per environment) -> AIDP and AI Factory components (SEC-01, SEC-02, SEC-09). Sample.
+flowchart TB
+  subgraph CORP["Corporate identity (source of truth)"]
+    direction LR
+    entra["Entra ID / Okta<br/>users, MFA, Conditional Access"]
+    ad["Active Directory / LDAP<br/>users, groups aidp-env-domain-role"]
+    pam["PAM vault<br/>break-glass and infra admin"]
+  end
+
+  subgraph KC["Keycloak (HA, on Kubernetes, PostgreSQL backed)"]
+    direction LR
+    broker["Identity brokering<br/>OIDC or SAML to Entra / Okta"]
+    fed["User federation<br/>LDAP, read-only, group mapper"]
+    subgraph REALMS["Realms"]
+      direction LR
+      rdev["aidp-dev"]
+      rqa["aidp-qa"]
+      rprod["aidp-prod"]
+    end
+    clients["Clients per component<br/>+ service accounts svc-env-*"]
+    scopes["Client scopes<br/>groups claim, audience"]
+  end
+
+  subgraph AIDP["Dell AI Data Platform"]
+    direction LR
+    dae["Data Analytics Engine<br/>Trino / Starburst: OIDC + JWT"]
+    dpe["Data Processing Engine<br/>Spark jobs: client credentials"]
+    cat["Iceberg REST catalog<br/>OAuth2 client credentials"]
+    dse["Data Search Engine<br/>Elasticsearch OIDC / JWT realm"]
+    obj["ObjectScale S3<br/>IAM: SAML federation or keys in vault"]
+    ps["PowerScale NFS / SMB<br/>AD / LDAP per access zone"]
+  end
+
+  subgraph AIF["Dell AI Factory"]
+    direction LR
+    k8s["Kubernetes / OpenShift API<br/>OIDC, groups to RBAC"]
+    gw["AI gateway in front of NIM<br/>JWT validation, token exchange"]
+    ml["MLflow<br/>behind oauth2-proxy"]
+    graf["Grafana<br/>generic OAuth, role mapping"]
+    infra["iDRAC / OpenManage / switches<br/>AD / LDAP via PAM"]
+  end
+
+  siem[("SIEM<br/>Keycloak login + admin events")]
+
+  entra --> broker
+  ad --> fed
+  broker --> REALMS
+  fed --> REALMS
+  REALMS --- clients
+  REALMS --- scopes
+  clients --> dae & dpe & cat & dse & k8s & gw & ml & graf
+  clients -. "SAML, confirm with Dell" .-> obj
+  ad -. "direct, not via Keycloak" .-> ps
+  pam -. "direct, not via Keycloak" .-> infra
+  KC --> siem

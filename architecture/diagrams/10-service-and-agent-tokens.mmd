@@ -1,0 +1,28 @@
+%% Non-interactive identities: a pipeline service account and an agent acting on behalf of a user (SEC-01, AGT-04, AGT-06). Sample.
+sequenceDiagram
+  autonumber
+  participant J as Spark job<br/>(svc-prod-pipeline)
+  participant V as Secrets vault
+  participant K as Keycloak<br/>realm aidp-prod
+  participant T as Data Analytics Engine
+  actor U as Support agent
+  participant A as Support assistant agent
+  participant G as AI gateway
+  participant S as Data Search Engine
+  participant LOG as SIEM
+  Note over J,T: Service account - client credentials grant
+  J->>V: Read client secret (or use a signed JWT / workload identity)
+  V-->>J: Secret, short lease
+  J->>K: POST token, grant_type = client_credentials
+  K-->>J: Access token, sub = service-account-svc-prod-pipeline, aud = trino, 5 min
+  J->>T: Query / MERGE with Bearer token
+  T->>T: JWT authenticator: issuer, audience, signature, user mapping
+  Note over U,S: Agent acting on behalf of the user - token exchange (RFC 8693)
+  U->>A: Question (user access token, aud = support-assistant)
+  A->>K: Token exchange: subject_token = user token, audience = search
+  K-->>A: New token, sub = user, azp = support-assistant, aud = search, user groups kept
+  A->>G: Tool call search_docs with exchanged token
+  G->>G: Validate token, check tool registry and limits
+  G->>S: Search, document filter acl IN user groups
+  S-->>G: Only documents the user may read
+  G->>LOG: user, agent client, tool, documents returned

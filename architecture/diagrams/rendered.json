@@ -5,5 +5,8 @@
   "04-sales-orders-data-flow.mmd": "f4f8e75814a74286",
   "05-environment-promotion.mmd": "4f4123739b6cfa9d",
   "06-physical-deployment.mmd": "514558121e088d05",
-  "07-rag-request-access-control.mmd": "950e01af70f674f8"
+  "07-rag-request-access-control.mmd": "950e01af70f674f8",
+  "08-identity-federation.mmd": "49cc65610cd6e0fa",
+  "09-user-sso-flow.mmd": "dcfc66833d3717f8",
+  "10-service-and-agent-tokens.mmd": "da94fae832f665ec"
 }
