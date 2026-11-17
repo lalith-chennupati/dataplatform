@@ -12,6 +12,7 @@ Everything here is a **sample** ("Acme"). Use it as a starting draft in the ques
 |---|---|
 | [`data-products.yaml`](data-products.yaml) | Source of truth: naming conventions, sources, domains, data products, consumers |
 | [`data-product-catalog.md`](data-product-catalog.md) | Generated catalog: one contract table per data product |
+| [`identity-keycloak.md`](identity-keycloak.md) ([Word](identity-keycloak.docx)) | Identity design: Keycloak between the corporate IdP and AIDP / AI Factory components, realms, groups, token flows, operations |
 | [`diagrams/*.mmd`](diagrams/) | Mermaid sources (plain text, editable, displayed by GitHub) |
 | `diagrams/*.svg`, `diagrams/*.png` | Rendered diagrams for documents and slides; `diagrams/rendered.json` records which source each was rendered from, so `--check` catches stale images |
 | [`../tools/build_architecture.py`](../tools/build_architecture.py) | Validates the YAML, regenerates the catalog and diagram 02, renders all diagrams |
@@ -27,6 +28,9 @@ Everything here is a **sample** ("Acme"). Use it as a starting draft in the ques
 | 5 | [Environment promotion](#5-environment-promotion) | Same commit dev → QA → prod with gates, approval, release record and rollback | [05](diagrams/05-environment-promotion.mmd) |
 | 6 | [Physical deployment](#6-physical-deployment) | Server roles, networks, storage, management and the isolated recovery site | [06](diagrams/06-physical-deployment.mmd) |
 | 7 | [RAG request with access control](#7-rag-request-with-access-control) | One assistant request: SSO, guardrails, document ACLs, citations, audit | [07](diagrams/07-rag-request-access-control.mmd) |
+| 8 | [Identity federation](identity-keycloak.md#2-federation-architecture) | Corporate IdP → Keycloak realms per environment → every AIDP and AI Factory component | [08](diagrams/08-identity-federation.mmd) |
+| 9 | [User sign-in flow](identity-keycloak.md#51-a-person-signs-in-and-queries-data) | Analyst SSO through Keycloak and Entra ID to a governed query | [09](diagrams/09-user-sso-flow.mmd) |
+| 10 | [Service and agent tokens](identity-keycloak.md#52-pipelines-and-agents) | Pipeline client credentials and agent on-behalf-of token exchange | [10](diagrams/10-service-and-agent-tokens.mmd) |
 
 ### 1. Logical architecture
 ![Logical architecture](diagrams/01-logical-architecture.png)
@@ -125,6 +129,7 @@ npm install -g @mermaid-js/mermaid-cli          # only needed for --render (or s
 python3 tools/build_architecture.py --render    # validate, regenerate catalog + diagram 02, render SVG/PNG
 python3 tools/build_architecture.py --check     # CI: fails if the catalog or diagrams are stale
 python3 tools/check_lab_guides.py               # question IDs and relative links
+python3 tools/md_to_docx.py architecture/identity-keycloak.md   # Word copy of the identity design (after --render)
 ```
 
 The script rejects unknown domains, inputs, consumers, questionnaire IDs and lab IDs, as well as sources or consumers that nothing uses. To change a diagram other than 02, edit its `.mmd` file and run `--render`. To edit visually, paste the `.mmd` into [mermaid.live](https://mermaid.live), or import it into draw.io (Arrange → Insert → Advanced → Mermaid).

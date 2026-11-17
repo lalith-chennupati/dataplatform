@@ -1,0 +1,27 @@
+%% A business analyst signs in to the Data Analytics Engine through Keycloak brokered to Entra ID, then queries a governed table (SEC-01, LAK-09). Sample.
+sequenceDiagram
+  autonumber
+  actor U as Finance analyst
+  participant T as Data Analytics Engine<br/>(Trino / Starburst)
+  participant K as Keycloak<br/>realm aidp-prod
+  participant E as Entra ID
+  participant AC as Trino access rules
+  participant LOG as SIEM
+  U->>T: Open web UI or JDBC (externalAuthentication)
+  T-->>U: Redirect to Keycloak (authorization code + PKCE)
+  U->>K: Authorize, client = trino
+  K-->>U: Redirect to Entra ID (identity brokering)
+  U->>E: Sign in with password + MFA
+  E-->>K: ID token (upn, object id)
+  K->>K: First-broker-login links the user, reads AD groups via LDAP federation
+  K-->>U: Authorization code
+  U->>T: Code
+  T->>K: Exchange code for tokens (client secret)
+  K-->>T: Access token: preferred_username, groups = [aidp-prod-finance-reader], aud = trino
+  T->>T: Validate signature (JWKS), issuer, audience, expiry
+  U->>T: SELECT from iceberg.prod_finance_consumption.revenue_by_region_month
+  T->>AC: user + groups
+  AC-->>T: allow SELECT, mask PII columns
+  T-->>U: Rows
+  K->>LOG: LOGIN, CODE_TO_TOKEN events
+  T->>LOG: Query event with user and groups
