@@ -1,0 +1,2963 @@
+{
+ "catalogs": [
+  {
+   "group": "aidp-break-glass",
+   "catalog": ".*",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-customer-engineer",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-customer-ml-engineer",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-finance-engineer",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-finance-ml-engineer",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-sales-engineer",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-sales-ml-engineer",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-service-engineer",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-service-ml-engineer",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-service-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-supply-engineer",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-supply-ml-engineer",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-prod-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-prod-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-prod-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-prod-service-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-prod-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-qa-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-qa-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-qa-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-qa-service-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-qa-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "allow": "all"
+  },
+  {
+   "group": "aidp-dev-customer-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-customer-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-finance-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-finance-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-sales-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-sales-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-service-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-service-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-supply-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-supply-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-customer-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-customer-model-approver",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-customer-owner",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-customer-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-customer-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-finance-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-finance-model-approver",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-finance-owner",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-finance-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-finance-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-sales-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-sales-model-approver",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-sales-owner",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-sales-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-sales-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-service-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-service-model-approver",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-service-owner",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-service-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-service-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-supply-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-supply-model-approver",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-supply-owner",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-supply-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-supply-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-customer-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-customer-ml-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-customer-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-customer-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-finance-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-finance-ml-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-finance-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-finance-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-sales-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-sales-ml-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-sales-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-sales-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-service-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-service-ml-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-service-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-service-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-supply-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-supply-ml-engineer",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-supply-reader",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-supply-steward",
+   "catalog": "iceberg",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-platform-admin",
+   "catalog": "system",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-platform-observer",
+   "catalog": "system",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-dev-platform-operator",
+   "catalog": "system",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-platform-admin",
+   "catalog": "system",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-platform-observer",
+   "catalog": "system",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-prod-platform-operator",
+   "catalog": "system",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-platform-admin",
+   "catalog": "system",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-platform-observer",
+   "catalog": "system",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-qa-platform-operator",
+   "catalog": "system",
+   "allow": "read-only"
+  },
+  {
+   "group": "aidp-security-auditor",
+   "catalog": "system",
+   "allow": "read-only"
+  },
+  {
+   "catalog": ".*",
+   "allow": "none"
+  }
+ ],
+ "schemas": [
+  {
+   "group": "aidp-break-glass",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-customer-engineer",
+   "schema": "dev_customer_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-customer-engineer",
+   "schema": "dev_customer_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-customer-engineer",
+   "schema": "dev_customer_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-customer-ml-engineer",
+   "schema": "dev_customer_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-customer-ml-engineer",
+   "schema": "dev_customer_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-customer-ml-engineer",
+   "schema": "dev_customer_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-customer-svc-pipeline",
+   "schema": "dev_customer_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-customer-svc-pipeline",
+   "schema": "dev_customer_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-customer-svc-pipeline",
+   "schema": "dev_customer_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-finance-engineer",
+   "schema": "dev_finance_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-finance-engineer",
+   "schema": "dev_finance_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-finance-engineer",
+   "schema": "dev_finance_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-finance-ml-engineer",
+   "schema": "dev_finance_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-finance-ml-engineer",
+   "schema": "dev_finance_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-finance-ml-engineer",
+   "schema": "dev_finance_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-finance-svc-pipeline",
+   "schema": "dev_finance_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-finance-svc-pipeline",
+   "schema": "dev_finance_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-finance-svc-pipeline",
+   "schema": "dev_finance_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-sales-engineer",
+   "schema": "dev_sales_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-sales-engineer",
+   "schema": "dev_sales_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-sales-engineer",
+   "schema": "dev_sales_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-sales-ml-engineer",
+   "schema": "dev_sales_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-sales-ml-engineer",
+   "schema": "dev_sales_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-sales-ml-engineer",
+   "schema": "dev_sales_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-sales-svc-pipeline",
+   "schema": "dev_sales_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-sales-svc-pipeline",
+   "schema": "dev_sales_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-sales-svc-pipeline",
+   "schema": "dev_sales_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-service-engineer",
+   "schema": "dev_service_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-service-engineer",
+   "schema": "dev_service_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-service-engineer",
+   "schema": "dev_service_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-service-ml-engineer",
+   "schema": "dev_service_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-service-ml-engineer",
+   "schema": "dev_service_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-service-ml-engineer",
+   "schema": "dev_service_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-service-svc-pipeline",
+   "schema": "dev_service_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-service-svc-pipeline",
+   "schema": "dev_service_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-service-svc-pipeline",
+   "schema": "dev_service_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-supply-engineer",
+   "schema": "dev_supply_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-supply-engineer",
+   "schema": "dev_supply_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-supply-engineer",
+   "schema": "dev_supply_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-supply-ml-engineer",
+   "schema": "dev_supply_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-supply-ml-engineer",
+   "schema": "dev_supply_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-supply-ml-engineer",
+   "schema": "dev_supply_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-supply-svc-pipeline",
+   "schema": "dev_supply_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-supply-svc-pipeline",
+   "schema": "dev_supply_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-dev-supply-svc-pipeline",
+   "schema": "dev_supply_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-customer-svc-pipeline",
+   "schema": "prod_customer_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-customer-svc-pipeline",
+   "schema": "prod_customer_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-customer-svc-pipeline",
+   "schema": "prod_customer_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-finance-svc-pipeline",
+   "schema": "prod_finance_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-finance-svc-pipeline",
+   "schema": "prod_finance_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-finance-svc-pipeline",
+   "schema": "prod_finance_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-sales-svc-pipeline",
+   "schema": "prod_sales_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-sales-svc-pipeline",
+   "schema": "prod_sales_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-sales-svc-pipeline",
+   "schema": "prod_sales_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-service-svc-pipeline",
+   "schema": "prod_service_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-service-svc-pipeline",
+   "schema": "prod_service_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-service-svc-pipeline",
+   "schema": "prod_service_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-supply-svc-pipeline",
+   "schema": "prod_supply_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-supply-svc-pipeline",
+   "schema": "prod_supply_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-prod-supply-svc-pipeline",
+   "schema": "prod_supply_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-customer-svc-pipeline",
+   "schema": "qa_customer_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-customer-svc-pipeline",
+   "schema": "qa_customer_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-customer-svc-pipeline",
+   "schema": "qa_customer_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-finance-svc-pipeline",
+   "schema": "qa_finance_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-finance-svc-pipeline",
+   "schema": "qa_finance_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-finance-svc-pipeline",
+   "schema": "qa_finance_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-sales-svc-pipeline",
+   "schema": "qa_sales_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-sales-svc-pipeline",
+   "schema": "qa_sales_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-sales-svc-pipeline",
+   "schema": "qa_sales_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-service-svc-pipeline",
+   "schema": "qa_service_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-service-svc-pipeline",
+   "schema": "qa_service_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-service-svc-pipeline",
+   "schema": "qa_service_raw",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-supply-svc-pipeline",
+   "schema": "qa_supply_consumption",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-supply-svc-pipeline",
+   "schema": "qa_supply_curated",
+   "owner": true
+  },
+  {
+   "group": "aidp-qa-supply-svc-pipeline",
+   "schema": "qa_supply_raw",
+   "owner": true
+  }
+ ],
+ "tables": [
+  {
+   "group": "aidp-break-glass",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-pii-reader",
+   "catalog": "iceberg",
+   "schema": "dev_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ],
+   "columns": [
+    {
+     "name": "email",
+     "mask": "'***'"
+    },
+    {
+     "name": "name",
+     "mask": "substr(name, 1, 1) || '***'"
+    }
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ],
+   "columns": [
+    {
+     "name": "email",
+     "mask": "'***'"
+    },
+    {
+     "name": "name",
+     "mask": "substr(name, 1, 1) || '***'"
+    }
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-steward",
+   "catalog": "iceberg",
+   "schema": "dev_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT"
+   ],
+   "columns": [
+    {
+     "name": "email",
+     "mask": "'***'"
+    },
+    {
+     "name": "name",
+     "mask": "substr(name, 1, 1) || '***'"
+    }
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-pii-reader",
+   "catalog": "iceberg",
+   "schema": "prod_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT"
+   ],
+   "columns": [
+    {
+     "name": "email",
+     "mask": "'***'"
+    },
+    {
+     "name": "name",
+     "mask": "substr(name, 1, 1) || '***'"
+    }
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-owner",
+   "catalog": "iceberg",
+   "schema": "prod_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT"
+   ],
+   "columns": [
+    {
+     "name": "email",
+     "mask": "'***'"
+    },
+    {
+     "name": "name",
+     "mask": "substr(name, 1, 1) || '***'"
+    }
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-steward",
+   "catalog": "iceberg",
+   "schema": "prod_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT"
+   ],
+   "columns": [
+    {
+     "name": "email",
+     "mask": "'***'"
+    },
+    {
+     "name": "name",
+     "mask": "substr(name, 1, 1) || '***'"
+    }
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-pii-reader",
+   "catalog": "iceberg",
+   "schema": "qa_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT"
+   ],
+   "columns": [
+    {
+     "name": "email",
+     "mask": "'***'"
+    },
+    {
+     "name": "name",
+     "mask": "substr(name, 1, 1) || '***'"
+    }
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT"
+   ],
+   "columns": [
+    {
+     "name": "email",
+     "mask": "'***'"
+    },
+    {
+     "name": "name",
+     "mask": "substr(name, 1, 1) || '***'"
+    }
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-steward",
+   "catalog": "iceberg",
+   "schema": "qa_customer_curated",
+   "table": "customer_master",
+   "privileges": [
+    "SELECT"
+   ],
+   "columns": [
+    {
+     "name": "email",
+     "mask": "'***'"
+    },
+    {
+     "name": "name",
+     "mask": "substr(name, 1, 1) || '***'"
+    }
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_customer_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_customer_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_customer_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_customer_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_customer_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_customer_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_customer_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_customer_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_customer_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_finance_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_finance_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_finance_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_finance_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_finance_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_finance_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_finance_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_finance_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_finance_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_sales_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_sales_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_sales_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_sales_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_sales_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_sales_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_sales_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_sales_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_sales_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_service_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_service_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_service_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_service_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_service_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_service_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_service_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_service_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_service_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_supply_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_supply_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_supply_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_supply_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_supply_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "dev_supply_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_supply_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_supply_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "dev_supply_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_customer_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_customer_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_customer_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_finance_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_finance_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_finance_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_sales_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_sales_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_sales_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_service_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_service_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_service_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_supply_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_supply_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "prod_supply_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_customer_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_customer_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_customer_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_finance_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_finance_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-finance-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_finance_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_sales_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_sales_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-sales-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_sales_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-service-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_service_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-service-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_service_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-service-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_service_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_supply_raw",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_supply_curated",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-supply-svc-pipeline",
+   "catalog": "iceberg",
+   "schema": "qa_supply_consumption",
+   "privileges": [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "OWNERSHIP",
+    "GRANT_SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-reader",
+   "catalog": "iceberg",
+   "schema": "dev_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-steward",
+   "catalog": "iceberg",
+   "schema": "dev_customer_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-customer-steward",
+   "catalog": "iceberg",
+   "schema": "dev_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-reader",
+   "catalog": "iceberg",
+   "schema": "dev_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-steward",
+   "catalog": "iceberg",
+   "schema": "dev_finance_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-finance-steward",
+   "catalog": "iceberg",
+   "schema": "dev_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-reader",
+   "catalog": "iceberg",
+   "schema": "dev_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-steward",
+   "catalog": "iceberg",
+   "schema": "dev_sales_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-sales-steward",
+   "catalog": "iceberg",
+   "schema": "dev_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-reader",
+   "catalog": "iceberg",
+   "schema": "dev_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-steward",
+   "catalog": "iceberg",
+   "schema": "dev_service_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-service-steward",
+   "catalog": "iceberg",
+   "schema": "dev_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-reader",
+   "catalog": "iceberg",
+   "schema": "dev_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-steward",
+   "catalog": "iceberg",
+   "schema": "dev_supply_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-supply-steward",
+   "catalog": "iceberg",
+   "schema": "dev_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_customer_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-model-approver",
+   "catalog": "iceberg",
+   "schema": "prod_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-owner",
+   "catalog": "iceberg",
+   "schema": "prod_customer_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-owner",
+   "catalog": "iceberg",
+   "schema": "prod_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-reader",
+   "catalog": "iceberg",
+   "schema": "prod_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-steward",
+   "catalog": "iceberg",
+   "schema": "prod_customer_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-customer-steward",
+   "catalog": "iceberg",
+   "schema": "prod_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_finance_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-model-approver",
+   "catalog": "iceberg",
+   "schema": "prod_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-owner",
+   "catalog": "iceberg",
+   "schema": "prod_finance_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-owner",
+   "catalog": "iceberg",
+   "schema": "prod_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-reader",
+   "catalog": "iceberg",
+   "schema": "prod_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-steward",
+   "catalog": "iceberg",
+   "schema": "prod_finance_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-finance-steward",
+   "catalog": "iceberg",
+   "schema": "prod_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_sales_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-model-approver",
+   "catalog": "iceberg",
+   "schema": "prod_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-owner",
+   "catalog": "iceberg",
+   "schema": "prod_sales_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-owner",
+   "catalog": "iceberg",
+   "schema": "prod_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-reader",
+   "catalog": "iceberg",
+   "schema": "prod_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-steward",
+   "catalog": "iceberg",
+   "schema": "prod_sales_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-sales-steward",
+   "catalog": "iceberg",
+   "schema": "prod_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_service_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-model-approver",
+   "catalog": "iceberg",
+   "schema": "prod_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-owner",
+   "catalog": "iceberg",
+   "schema": "prod_service_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-owner",
+   "catalog": "iceberg",
+   "schema": "prod_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-reader",
+   "catalog": "iceberg",
+   "schema": "prod_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-steward",
+   "catalog": "iceberg",
+   "schema": "prod_service_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-service-steward",
+   "catalog": "iceberg",
+   "schema": "prod_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_supply_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-engineer",
+   "catalog": "iceberg",
+   "schema": "prod_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-model-approver",
+   "catalog": "iceberg",
+   "schema": "prod_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-owner",
+   "catalog": "iceberg",
+   "schema": "prod_supply_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-owner",
+   "catalog": "iceberg",
+   "schema": "prod_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-reader",
+   "catalog": "iceberg",
+   "schema": "prod_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-steward",
+   "catalog": "iceberg",
+   "schema": "prod_supply_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-supply-steward",
+   "catalog": "iceberg",
+   "schema": "prod_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_customer_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_customer_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-reader",
+   "catalog": "iceberg",
+   "schema": "qa_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-steward",
+   "catalog": "iceberg",
+   "schema": "qa_customer_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-customer-steward",
+   "catalog": "iceberg",
+   "schema": "qa_customer_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-finance-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_finance_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-finance-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-finance-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_finance_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-finance-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-finance-reader",
+   "catalog": "iceberg",
+   "schema": "qa_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-finance-steward",
+   "catalog": "iceberg",
+   "schema": "qa_finance_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-finance-steward",
+   "catalog": "iceberg",
+   "schema": "qa_finance_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-sales-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_sales_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-sales-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-sales-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_sales_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-sales-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-sales-reader",
+   "catalog": "iceberg",
+   "schema": "qa_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-sales-steward",
+   "catalog": "iceberg",
+   "schema": "qa_sales_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-sales-steward",
+   "catalog": "iceberg",
+   "schema": "qa_sales_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-service-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_service_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-service-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-service-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_service_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-service-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-service-reader",
+   "catalog": "iceberg",
+   "schema": "qa_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-service-steward",
+   "catalog": "iceberg",
+   "schema": "qa_service_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-service-steward",
+   "catalog": "iceberg",
+   "schema": "qa_service_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-supply-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_supply_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-supply-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-supply-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_supply_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-supply-ml-engineer",
+   "catalog": "iceberg",
+   "schema": "qa_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-supply-reader",
+   "catalog": "iceberg",
+   "schema": "qa_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-supply-steward",
+   "catalog": "iceberg",
+   "schema": "qa_supply_curated",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-supply-steward",
+   "catalog": "iceberg",
+   "schema": "qa_supply_consumption",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-platform-admin",
+   "catalog": "system",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-platform-observer",
+   "catalog": "system",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-dev-platform-operator",
+   "catalog": "system",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-platform-admin",
+   "catalog": "system",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-platform-observer",
+   "catalog": "system",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-prod-platform-operator",
+   "catalog": "system",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-platform-admin",
+   "catalog": "system",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-platform-observer",
+   "catalog": "system",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-qa-platform-operator",
+   "catalog": "system",
+   "privileges": [
+    "SELECT"
+   ]
+  },
+  {
+   "group": "aidp-security-auditor",
+   "catalog": "system",
+   "privileges": [
+    "SELECT"
+   ]
+  }
+ ],
+ "queries": [
+  {
+   "group": "aidp-break-glass",
+   "allow": [
+    "execute",
+    "view",
+    "kill"
+   ]
+  },
+  {
+   "group": "aidp-dev-platform-admin",
+   "allow": [
+    "execute",
+    "view",
+    "kill"
+   ]
+  },
+  {
+   "group": "aidp-dev-platform-observer",
+   "allow": [
+    "execute",
+    "view"
+   ]
+  },
+  {
+   "group": "aidp-dev-platform-operator",
+   "allow": [
+    "execute",
+    "view",
+    "kill"
+   ]
+  },
+  {
+   "group": "aidp-prod-platform-admin",
+   "allow": [
+    "execute",
+    "view",
+    "kill"
+   ]
+  },
+  {
+   "group": "aidp-prod-platform-observer",
+   "allow": [
+    "execute",
+    "view"
+   ]
+  },
+  {
+   "group": "aidp-prod-platform-operator",
+   "allow": [
+    "execute",
+    "view",
+    "kill"
+   ]
+  },
+  {
+   "group": "aidp-qa-platform-admin",
+   "allow": [
+    "execute",
+    "view",
+    "kill"
+   ]
+  },
+  {
+   "group": "aidp-qa-platform-observer",
+   "allow": [
+    "execute",
+    "view"
+   ]
+  },
+  {
+   "group": "aidp-qa-platform-operator",
+   "allow": [
+    "execute",
+    "view",
+    "kill"
+   ]
+  },
+  {
+   "group": "aidp-security-auditor",
+   "allow": [
+    "execute",
+    "view"
+   ]
+  },
+  {
+   "allow": [
+    "execute"
+   ]
+  }
+ ]
+}

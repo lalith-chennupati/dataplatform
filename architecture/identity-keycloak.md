@@ -40,11 +40,14 @@ Source: [08](diagrams/08-identity-federation.mmd)
 | `aidp-prod-<domain>-reader` | aidp-prod | `SELECT` on `iceberg.prod_<domain>_consumption.*`; search on the domain's indexes; dashboards Viewer |
 | `aidp-prod-<domain>-engineer` | aidp-prod | read curated; no direct writes in prod (writes come only from `svc-prod-*`) |
 | `aidp-dev-<domain>-engineer` | aidp-dev | read/write `iceberg.dev_<domain>_*`; deploy to dev |
-| `aidp-prod-<domain>-steward` | aidp-prod | manage tags, masks and row filters for the domain; approve access requests |
-| `aidp-prod-pii-reader` | aidp-prod | unmasked PII columns (time-bound, approved) |
-| `aidp-<env>-platform-admin` | each | Kubernetes cluster-admin, Grafana Admin, Keycloak realm-admin (step-up MFA) |
-| `aidp-<env>-ml-engineer` | each | MLflow write, model registry aliases in dev/qa; prod aliases only through the release pipeline |
-| `aidp-prod-security-auditor` | aidp-prod | read-only on audit logs, access rules and Keycloak events |
+| `aidp-prod-<domain>-steward` | aidp-prod | manage tags, masks and row filters for the domain |
+| `aidp-prod-<domain>-owner` | aidp-prod | approve access requests and prod releases for the domain |
+| `aidp-prod-<domain>-pii-reader` | aidp-prod | unmasked PII columns of the domain (time-bound, approved) |
+| `aidp-<env>-platform-admin` | each | Kubernetes cluster-admin, Grafana Admin, Keycloak realm-admin (just-in-time, step-up MFA) |
+| `aidp-<env>-<domain>-ml-engineer` | dev, qa | MLflow write, model registry aliases in dev/qa; prod aliases only through the release pipeline |
+| `aidp-security-auditor` | all | read-only on audit logs, access rules and Keycloak events |
+
+The full role model (15 roles, inheritance, privileges per component, separation of duties) is in [roles-and-privileges.md](roles-and-privileges.md).
 
 Example: a finance analyst is in `aidp-prod-finance-reader`; she can query `finance.revenue_by_region_month`, cannot read `sales.orders` curated data, and sees `customer_master` columns masked.
 
