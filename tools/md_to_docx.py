@@ -50,7 +50,7 @@ def convert(src):
             run.font.name = "Consolas"
             run.font.size = Pt(8)
         elif m := re.match(r"(#{1,4}) (.*)", line):
-            doc.add_heading(m.group(2), level=len(m.group(1)) - 1 if len(m.group(1)) > 1 else 0)
+            doc.add_heading(m.group(2).replace("`", ""), level=len(m.group(1)) - 1 if len(m.group(1)) > 1 else 0)
         elif m := re.match(r"!\[([^\]]*)\]\(([^)]+)\)", line):
             doc.add_picture(str(src.parent / m.group(2)), width=Inches(6.5))
             doc.add_paragraph(m.group(1)).italic = True
