@@ -30,7 +30,7 @@ L00 Orientation ─► L01 Lab environment
         ├─► Track B  Data engines (Lakehouse, Spark, Search)          B01─B08
         ├─► Track C  Compute, fabric & infrastructure automation      C01─C08
         ├─► Track D  AI software & workloads (NIM, RAG, tuning, agents) D01─D09
-        └─► Track E  Security, resilience, operations & FinOps        E01─E06
+        └─► Track E  Security, resilience, operations & FinOps        E01─E07
                                    │
                                    ▼
                          X01 Capstone: standards-compliant AI Factory tenant
@@ -90,6 +90,7 @@ Suggested order for a first pass: L00 → L01 → A01 → A09 → B01 → B02 �
 | [E04](guides/E-operations/E04-dr-drill.md) | DR drill for an AI service | SyncIQ failover/failback, re-deploy inference + RAG at DR site, RPO/RTO measurement | SIM / HW | 4h | BCR, OPS |
 | [E05](guides/E-operations/E05-chargeback-capacity.md) | Chargeback & capacity | Quota reports, GPU-hour metering, mandatory labels, showback dashboard | SIM | 3h | FIN |
 | [E06](guides/E-operations/E06-ai-governance-evidence.md) | AI governance evidence | Model inventory, model cards, lineage, audit-log export for compliance | SIM | 3h | GOV, PRV |
+| [E07](guides/E-operations/E07-roles-and-privileges.md) | Roles and privileges as code | Role hierarchy, SoD checks, generated Trino policy tested allow/deny, Dell role mapping | SIM / DEMO | 2h | SEC, LAK |
 | **Capstone** | | | | | |
 | [X01](guides/X-capstone/X01-capstone-tenant.md) | Standards-compliant AI Factory tenant | Onboard a tenant end-to-end against STD-01..STD-20 | SIM / HW | 1-2 days | All |
 
@@ -325,6 +326,11 @@ Suggested order for a first pass: L00 → L01 → A01 → A09 → B01 → B02 �
 - **Covers:** AI inventory, model cards, data lineage across lakehouse -> features/embeddings -> model, audit-log export.
 - **Activities:** Generate an evidence pack for one production use case that an auditor could review.
 - **Done when:** The evidence pack satisfies `GOV-06`, `PRV-05`.
+
+### E07 - Roles and privileges as code
+- **Covers:** Role hierarchy and separation of duties defined once in `architecture/roles.yaml`, generated query-layer policy, PII masking by role, mapping to Dell component roles.
+- **Activities:** Validate the role model, generate the Trino policy, prove every sample person's allowed and denied access, change a role through review.
+- **Done when:** The generated policy passes the allow/deny test and the access model (`SEC-02`, `LAK-09`) is decided.
 
 ## X01 - Capstone: standards-compliant AI Factory tenant
 

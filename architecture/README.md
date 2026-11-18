@@ -13,6 +13,7 @@ Everything here is a **sample** ("Acme"). Use it as a starting draft in the ques
 | [`data-products.yaml`](data-products.yaml) | Source of truth: naming conventions, sources, domains, data products, consumers |
 | [`data-product-catalog.md`](data-product-catalog.md) | Generated catalog: one contract table per data product |
 | [`identity-keycloak.md`](identity-keycloak.md) ([Word](identity-keycloak.docx)) | Identity design: Keycloak between the corporate IdP and AIDP / AI Factory components, realms, groups, token flows, operations |
+| [`roles-and-privileges.md`](roles-and-privileges.md) ([Word](roles-and-privileges.docx)) | Roles and privileges standard: SRE ownership, role hierarchy, privileges per component, separation of duties; generated from [`roles.yaml`](roles.yaml) into [`roles-matrix.md`](roles-matrix.md) and the lab Trino policy |
 | [`diagrams/*.mmd`](diagrams/) | Mermaid sources (plain text, editable, displayed by GitHub) |
 | `diagrams/*.svg`, `diagrams/*.png` | Rendered diagrams for documents and slides; `diagrams/rendered.json` records which source each was rendered from, so `--check` catches stale images |
 | [`../tools/build_architecture.py`](../tools/build_architecture.py) | Validates the YAML, regenerates the catalog and diagram 02, renders all diagrams |
@@ -31,6 +32,7 @@ Everything here is a **sample** ("Acme"). Use it as a starting draft in the ques
 | 8 | [Identity federation](identity-keycloak.md#2-federation-architecture) | Corporate IdP → Keycloak realms per environment → every AIDP and AI Factory component | [08](diagrams/08-identity-federation.mmd) |
 | 9 | [User sign-in flow](identity-keycloak.md#51-a-person-signs-in-and-queries-data) | Analyst SSO through Keycloak and Entra ID to a governed query | [09](diagrams/09-user-sso-flow.mmd) |
 | 10 | [Service and agent tokens](identity-keycloak.md#52-pipelines-and-agents) | Pipeline client credentials and agent on-behalf-of token exchange | [10](diagrams/10-service-and-agent-tokens.mmd) |
+| 11 | [Role hierarchy](roles-and-privileges.md#3-role-hierarchy) | Platform, security, data, AI and workload roles, inheritance and separation-of-duties pairs | [11](diagrams/11-role-hierarchy.mmd) (generated) |
 
 ### 1. Logical architecture
 ![Logical architecture](diagrams/01-logical-architecture.png)

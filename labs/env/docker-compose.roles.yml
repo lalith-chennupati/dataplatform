@@ -1,0 +1,11 @@
+# Overlay for lab E07: Trino enforces the role model generated from architecture/roles.yaml
+# (groups from trino/roles/group.txt stand in for AD / Keycloak groups).
+#   python3 ../../tools/build_roles.py
+#   docker compose -f docker-compose.yml -f docker-compose.roles.yml --profile core up -d --force-recreate trino
+services:
+  trino:
+    volumes:
+      - ./trino/roles/access-control.properties:/etc/trino/access-control.properties:ro
+      - ./trino/roles/group-provider.properties:/etc/trino/group-provider.properties:ro
+      - ./trino/roles/rules.json:/etc/trino/rules.json:ro
+      - ./trino/roles/group.txt:/etc/trino/group.txt:ro

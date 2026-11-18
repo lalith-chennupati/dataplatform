@@ -1,0 +1,293 @@
+# Source of truth for AIDP roles and privileges (sample). Edit, then run: python3 tools/build_roles.py
+# Generates roles-matrix.md, diagrams/11-role-hierarchy.mmd and the lab Trino policy in labs/env/trino/roles/.
+#
+# Role keys:
+#   tier        break-glass | platform | security | data | ai | workload
+#   scope       global (one group) | env (aidp-<env>-<role>) | env-domain (aidp-<env>-<domain>-<role>)
+#   kind        human | service
+#   group       role part of the group name (default: id)
+#   inherits    roles whose privileges this role also gets (same scope or narrower); depth <= 3
+#   owner       role that owns the definition; approver: who approves membership
+#   duration    standing | jit (elevated per change, max hours) | time-bound (max days)
+#   envs        environments the role exists in (default: all)
+#   trino       machine-readable query-layer grants, expanded per env and domain:
+#               {envs, layers, access: read|write|owner} on iceberg.<env>_<domain>_<layer>
+#               {system: read} system catalog; {queries: [view, kill]} other users' queries; {unmasked: true} no PII masks
+#   privileges  per component, human-readable (enforced in that component's own policy)
+
+meta:
+  title: AIDP roles and privileges (sample)
+  group_name: "aidp-<env>-<domain>-<role>"
+  environments: [dev, qa, prod]
+  domains_from: data-products.yaml
+  max_depth: 3
+  components: [trino, objectscale, powerscale, search, kubernetes, mlflow, grafana, keycloak, infrastructure]
+
+roles:
+  - id: break-glass
+    tier: break-glass
+    scope: global
+    kind: human
+    inherits: []
+    owner: CISO
+    approver: CISO + SRE lead (two-person)
+    duration: jit (sealed in PAM, alert on use, review every use)
+    purpose: Recover the platform when normal admin paths are broken.
+    trino: [{all: true}]
+    privileges:
+      keycloak: master realm admin
+      kubernetes: cluster-admin on every cluster
+      infrastructure: iDRAC / OpenManage / switch / OneFS root
+      objectscale: system admin
+      powerscale: root / Security Administrator
+
+  - id: platform-observer
+    tier: platform
+    scope: env
+    kind: human
+    inherits: []
+    owner: SRE lead
+    approver: SRE lead
+    duration: standing
+    purpose: See platform health without seeing business data.
+    trino: [{system: read}, {queries: [view]}]
+    privileges:
+      kubernetes: view on platform namespaces, no Secrets
+      grafana: Viewer on platform dashboards
+      objectscale: monitor (capacity, health), no object read
+      powerscale: read-only audit/monitor role, no file data
+      search: monitor cluster privilege, no index read
+      mlflow: none
+
+  - id: platform-operator
+    tier: platform
+    scope: env
+    kind: human
+    inherits: [platform-observer]
+    owner: SRE lead
+    approver: SRE lead
+    duration: standing in dev/qa, change ticket in prod
+    purpose: Run the platform day to day - deploy, scale, restart, quotas, kill runaway queries.
+    trino: [{queries: [view, kill]}]
+    privileges:
+      kubernetes: edit on platform namespaces (Deployments, scale, rollout restart), no Secrets read
+      grafana: Editor on platform dashboards, alert rules
+      objectscale: bucket and quota management, no object read
+      powerscale: quotas, snapshots, SyncIQ policies; no file data
+      search: manage index lifecycle and snapshots, no document read
+      infrastructure: OpenManage operator (alerts, firmware jobs) via PAM
+
+  - id: platform-admin
+    tier: platform
+    scope: env
+    kind: human
+    inherits: [platform-operator]
+    owner: SRE lead
+    approver: SRE manager (not the requester)
+    duration: jit (max 4 h, ticket required)
+    purpose: Change platform configuration - cluster RBAC, Keycloak clients, storage tenants.
+    trino: []
+    privileges:
+      kubernetes: cluster-admin (JIT)
+      keycloak: realm admin for the environment realm (clients, scopes, keys); group membership comes from AD so cannot self-grant
+      objectscale: namespace / tenant admin
+      powerscale: access zone admin
+      grafana: Admin
+      mlflow: server configuration
+
+  - id: security-auditor
+    tier: security
+    scope: global
+    kind: human
+    inherits: []
+    owner: CISO
+    approver: CISO
+    duration: standing
+    purpose: Verify controls independently - read access rules, logs and events, never data.
+    trino: [{system: read}, {queries: [view]}]
+    privileges:
+      keycloak: view-events, view-realm (read-only) in every realm
+      kubernetes: view RBAC, audit log access
+      objectscale: read bucket policies and access logs
+      powerscale: audit log read
+      search: read audit indices only
+      grafana: Viewer on security dashboards
+
+  - id: access-admin
+    tier: security
+    scope: global
+    kind: human
+    inherits: []
+    owner: IAM lead
+    approver: IAM lead
+    duration: standing
+    purpose: Add and remove people from aidp-* groups in AD / Entra after the role approver signs off.
+    trino: []
+    privileges:
+      keycloak: none (groups are read from AD)
+      infrastructure: AD / Entra group management for aidp-* groups only
+
+  - id: domain-reader
+    group: reader
+    tier: data
+    scope: env-domain
+    kind: human
+    inherits: []
+    owner: domain owner
+    approver: domain owner
+    duration: standing
+    purpose: Use the domain's published data products.
+    trino: [{envs: [dev, qa, prod], layers: [consumption], access: read}]
+    privileges:
+      search: read the domain's indexes (document ACLs still apply)
+      grafana: Viewer on the domain's dashboards
+      objectscale: none (all access through Trino / Search)
+
+  - id: domain-steward
+    group: steward
+    tier: data
+    scope: env-domain
+    kind: human
+    inherits: [domain-reader]
+    owner: domain owner
+    approver: domain owner
+    duration: standing
+    purpose: Own data quality and classification - tags, masks, row filters, DQ rules.
+    trino: [{envs: [dev, qa, prod], layers: [curated], access: read}]
+    privileges:
+      trino: approves changes to the domain's policy rules in Git (CODEOWNERS)
+      search: manage the domain's index metadata and ACL mappings
+      mlflow: read
+
+  - id: domain-owner
+    group: owner
+    tier: data
+    scope: env-domain
+    kind: human
+    inherits: [domain-steward]
+    owner: CDO
+    approver: CDO
+    duration: standing
+    envs: [prod]
+    purpose: Accountable for the domain - approves access requests and prod releases.
+    trino: []
+    privileges:
+      trino: approves access to the domain's roles; approves prod releases of the domain (B08 four-eyes)
+
+  - id: domain-engineer
+    group: engineer
+    tier: data
+    scope: env-domain
+    kind: human
+    inherits: [domain-reader]
+    owner: domain owner
+    approver: domain owner
+    duration: standing
+    purpose: Build the domain's pipelines - full control in dev, read-only in QA and prod.
+    trino:
+      - {envs: [dev], layers: [raw, curated, consumption], access: owner}
+      - {envs: [qa, prod], layers: [curated], access: read}
+    privileges:
+      kubernetes: edit on the domain's dev namespace; view and logs on qa/prod namespaces
+      objectscale: read/write s3://aidp-dev/<domain>/ only
+      powerscale: read/write /ifs/aidp/dev/<domain>/ only
+      mlflow: read
+
+  - id: pii-reader
+    tier: data
+    scope: env-domain
+    kind: human
+    inherits: []
+    owner: domain owner
+    approver: domain owner + privacy officer
+    duration: time-bound (max 90 days)
+    purpose: Add-on for a named purpose - read the domain's masked tables with PII unmasked.
+    trino: [{unmasked: true}]
+    privileges:
+      search: unmasked PII fields in the domain's indexes
+
+  - id: ml-engineer
+    tier: ai
+    scope: env-domain
+    kind: human
+    inherits: [domain-engineer]
+    owner: Head of ML
+    approver: domain owner
+    duration: standing
+    envs: [dev, qa]
+    purpose: Train, evaluate and register models on the domain's data.
+    trino: []
+    privileges:
+      mlflow: create experiments and runs, register model versions, set dev/qa aliases
+      kubernetes: submit GPU jobs in the domain's dev namespace (quota bound)
+      objectscale: read/write s3://aidp-dev/<domain>/models/
+
+  - id: model-approver
+    tier: ai
+    scope: env-domain
+    kind: human
+    inherits: [domain-reader]
+    owner: AI governance council
+    approver: AI governance council
+    duration: standing
+    envs: [prod]
+    purpose: Approve promotion of a model version to the prod champion alias.
+    trino: []
+    privileges:
+      mlflow: approve prod alias change through the release pipeline (not set it directly)
+
+  - id: ai-app-user
+    tier: ai
+    scope: env
+    kind: human
+    inherits: []
+    owner: AI platform lead
+    approver: business manager
+    duration: standing
+    purpose: Use approved AI assistants through the AI gateway.
+    trino: []
+    privileges:
+      search: none directly; the gateway queries on the user's behalf with document ACLs
+      infrastructure: AI gateway access to approved assistants (rate limited)
+
+  - id: svc-pipeline
+    tier: workload
+    scope: env-domain
+    kind: service
+    inherits: []
+    owner: domain owner
+    approver: domain owner (via the release pipeline)
+    duration: standing (client credentials, 5 min tokens)
+    purpose: The only identity that writes a domain's tables in QA and prod (named svc-<env>-<domain>-pipeline).
+    trino: [{envs: [dev, qa, prod], layers: [raw, curated, consumption], access: owner}, {unmasked: true}]
+    privileges:
+      objectscale: read/write s3://aidp-<env>/<domain>/ only
+      powerscale: read /ifs/aidp/<env>/<domain>/ landing zone
+      kubernetes: runs as a ServiceAccount in the domain's namespace, no interactive login
+
+# Pairs one person (or one role through inheritance) must never hold together, in any environments.
+separation_of_duties:
+  - {roles: [security-auditor, platform-admin], why: auditors must not administer what they audit}
+  - {roles: [security-auditor, access-admin], why: whoever grants access must not audit it}
+  - {roles: [access-admin, domain-owner], why: the approver and the person who applies the grant must differ}
+  - {roles: [ml-engineer, model-approver], why: a model builder must not approve their own model for prod}
+  - {roles: [platform-admin, pii-reader], why: an admin with unmasked data can bypass every control}
+  - {roles: [platform-admin, domain-engineer], why: admins do not build business pipelines in the same environment}
+
+# PII columns masked for everyone without pii-reader (or the pipeline service account) on that domain.
+masks:
+  - {product: customer.customer_master, layer: curated, column: email, mask: "'***'"}
+  - {product: customer.customer_master, layer: curated, column: name, mask: "substr(name, 1, 1) || '***'"}
+
+# Sample people used by the lab test (labs/env/trino/roles/group.txt). Groups follow meta.group_name.
+personas:
+  - {user: olivia-sre, groups: [aidp-dev-platform-operator, aidp-prod-platform-operator]}
+  - {user: sam-auditor, groups: [aidp-security-auditor]}
+  - {user: fatima-finance, groups: [aidp-prod-finance-reader]}
+  - {user: erik-fin-eng, groups: [aidp-dev-finance-engineer, aidp-prod-finance-engineer]}
+  - {user: sara-cust-steward, groups: [aidp-prod-customer-steward]}
+  - {user: priya-cust-pii, groups: [aidp-prod-customer-steward, aidp-prod-customer-pii-reader]}
+  - {user: mia-ml, groups: [aidp-dev-customer-ml-engineer]}
+  - {user: svc-dev-finance-pipeline, groups: [aidp-dev-finance-svc-pipeline]}
+  - {user: svc-prod-finance-pipeline, groups: [aidp-prod-finance-svc-pipeline]}
+  - {user: admin, groups: [aidp-break-glass]}

@@ -1,0 +1,12 @@
+aidp-break-glass:admin
+aidp-dev-customer-ml-engineer:mia-ml
+aidp-dev-finance-engineer:erik-fin-eng
+aidp-dev-finance-svc-pipeline:svc-dev-finance-pipeline
+aidp-dev-platform-operator:olivia-sre
+aidp-prod-customer-pii-reader:priya-cust-pii
+aidp-prod-customer-steward:sara-cust-steward,priya-cust-pii
+aidp-prod-finance-engineer:erik-fin-eng
+aidp-prod-finance-reader:fatima-finance
+aidp-prod-finance-svc-pipeline:svc-prod-finance-pipeline
+aidp-prod-platform-operator:olivia-sre
+aidp-security-auditor:sam-auditor
